@@ -14,7 +14,7 @@ Package `sumR` facilitates using its low-level C function in other packages. In 
 3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
 4. Use sumR's functions in your code.
 
-The following code exemplifies a C function in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` and `R_xlen_t` types and related macros and functions.
+The following code exemplifies a C function in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions. `R_xlen_t` is an alias for `long`.
 
 ```C
 #include <Rinternals.h>
