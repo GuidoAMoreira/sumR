@@ -1,2 +1,49 @@
-# sumR
-An R package that implements approximation algorithms for sums of series
+# Installation
+Installing this package in R from this GitHub page is straightforward. Make sure you have the package `devtool` installed and that your Operating System has a C compiler that R can access. This is automatically true in a standard installation in Linux, requires Xcode or gcc (depends on MacOS version) in Mac, and Rtools in Windows. Then, just run:
+
+```R
+devtools::install_github("GuidoAMoreira/sumR")
+```
+
+# Interfacing low-level summation
+
+Package `sumR` facilitates using its low-level C function in other packages. In order to use it, these steps are necessary:
+
+1. Make sure that the DESCRIPTION file in your package includes sumR in its **LinkingTo** and **Imports** fields.
+2. Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as yourpackage-package.R
+3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
+4. Use sumR's function at will!
+
+The following example exemplifies a C function in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions.
+
+```C
+#include <Rinternals.h>
+#include <Rmath.h> // Required for the log1p function
+#include <sumRAPI.h>
+
+long double some_series(R_xlen_t n, double *p)
+{
+  long double out = n * log1p(-p[0]);
+  return (long double)out;
+}
+
+SEXP sum_series(SEXP param)
+{
+  double parameter = REAL(param)[0];
+  long double r;
+  R_xlen_t n; // Number of iterations. Doesn't require initialization.
+
+  r = infiniteSum(some_series, parameters, exp(-35), 100000, log1p(-parameter), 0, &n);
+
+  return Rf_ScalarReal((double)r);
+}
+
+```
+
+Then your package can have an R wrapper function such as:
+
+```R
+#' Wrapper function that sums a series for a given parameter
+#' @export
+sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
+```
