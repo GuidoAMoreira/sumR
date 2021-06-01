@@ -12,7 +12,7 @@ Package `sumR` facilitates using its low-level C function in other packages. In 
 1. Make sure that the DESCRIPTION file in your package includes sumR in its **LinkingTo** and **Imports** fields.
 2. Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as yourpackage-package.R
 3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
-4. Use sumR's function at will!
+4. Use sumR's functions at will!
 
 The following example exemplifies a C function in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions.
 
@@ -47,3 +47,14 @@ Then your package can have an R wrapper function such as:
 #' @export
 sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
 ```
+
+The interfaced functions from sumR are:
+
+```C
+long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
+long double infiniteSumToThreshold(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n)
+long double infiniteAdaptive(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
+long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start)
+```
+
+Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `infiniteAdaptive` depending on the value of `logL` and returns the result of the respectively chosen function.
