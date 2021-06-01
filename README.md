@@ -23,8 +23,8 @@ The following code exemplifies a C function in a package after steps 1. and 2. a
 
 long double some_series(R_xlen_t n, double *p)
 {
-  long double out = n * log1p(-p[0]);
-  return (long double)out;
+  long double out = n * log1pl(-p[0]);
+  return out;
 }
 
 SEXP sum_series(SEXP param)
