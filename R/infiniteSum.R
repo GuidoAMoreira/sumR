@@ -88,7 +88,7 @@
 #'
 #' The advanced user can program their own precompiled functions and use the
 #' package's summation algorithms by linking the appropriate header file. See
-#' the \href{github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
+#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
 #' that can be used for the summation.
 #' @examples
