@@ -29,11 +29,13 @@ long double some_series(R_xlen_t n, double *p)
 
 SEXP sum_series(SEXP param)
 {
-  double parameter = REAL(param)[0];
+  double parameter[1];
   long double r;
   R_xlen_t n; // Number of iterations. Doesn't require initialization.
 
-  r = infiniteSum(some_series, parameters, exp(-35), 100000, log1p(-parameter), 0, &n);
+  parameter[0] = REAL(param)[0];
+
+  r = infiniteSum(some_series, parameters, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
 
   return Rf_ScalarReal((double)r);
 }
