@@ -215,8 +215,8 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       warning('Parameter logL is NULL. It is recommended to use the true value
       if known. Estimating it numerically. See help("infiniteSum") for
       details.')
-      logL <- logFunction(.Machine$integer.max, paramters) -
-        logFunction(.Machine$integer.max - 1, paramters)
+      logL <- logFunction(.Machine$integer.max, parameters) -
+        logFunction(.Machine$integer.max - 1, parameters)
     }
     stopifnot(logL < 0)
 

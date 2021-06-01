@@ -224,8 +224,6 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
                    PACKAGE = "sumR")
     }
   } else if(is.function(logFunction)) {
-    stopifnot(logL < 0)
-
     f <- function(k, Theta) logFunction(k, Theta)
 
     out <- .Call("inf_c_folding",
