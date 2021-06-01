@@ -4,7 +4,7 @@
 #' user to approximate the sum of series. It also interfaces the low level
 #' \code{C} functions that perform the actual summation, so that other packages
 #' can apply them to their own functions written in \code{C} or \code{C++}. The
-#' \href{github.com/GuidoAMoreira/sumR}{GitHub} page provides a short tutorial
+#' \href{https://github.com/GuidoAMoreira/sumR}{GitHub} page provides a short tutorial
 #' on how to achieve this.
 #'
 #' The underlying code is under frequent revision for improvements in speed,
