@@ -56,7 +56,7 @@ long double infiniteAdaptive(
 }
 
 // c-folding algorithm
-long double infiniteCFolgind(
+long double infiniteCFolding(
     long double logFun(R_xlen_t k, double *Theta),
     double *params, double eps,
     R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start) {
