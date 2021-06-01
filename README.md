@@ -18,7 +18,7 @@ The following code exemplifies a C function in a package after steps 1. and 2. a
 
 ```C
 #include <Rinternals.h>
-#include <Rmath.h> // Required for the log1pl function
+#include <Rmath.h> // Required for the log1p and log1pl functions
 #include <sumRAPI.h>
 
 long double some_series(R_xlen_t n, double *p)
