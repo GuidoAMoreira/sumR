@@ -60,3 +60,6 @@ long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), doub
 ```
 
 Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `infiniteAdaptive` depending on the value of `logL` and returns the result of the respectively chosen function.
+
+## Note
+We have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable.
