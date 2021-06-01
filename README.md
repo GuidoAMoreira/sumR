@@ -53,10 +53,10 @@ sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
 The interfaced functions from sumR are:
 
 ```C
-long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
-long double infiniteSumToThreshold(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n)
-long double infiniteAdaptive(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
-long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start)
+long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
+long double infiniteSumToThreshold(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n);
+long double infiniteAdaptive(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
+long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start);
 ```
 
 Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `infiniteAdaptive` depending on the value of `logL` and returns the result of the respectively chosen function.
