@@ -131,9 +131,9 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
             forceAlgorithm %in% 0:2)
 
   if (forceAlgorithm == 1 && !is.null(logL)){
-    logL <- NULL
+    logL <- -1
     warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be
-            ignored")
+            ignored.")
   }
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   forceAlgorithm <- as.integer(forceAlgorithm)
