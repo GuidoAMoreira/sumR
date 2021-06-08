@@ -105,7 +105,12 @@ test_that("Conway-Maxwell with lambda = 2 and nu = 2, higher tolerance", {
   Eps <- 1E-10
   M <- 1E5
   TrueValue <- log(besselI(2*sqrt(Lambda), nu = 0))
-  logAns <- adaptiveSum::adapt_sum(lFun = COMP_lpdf, params = Theta, eps = Eps, maxIter = 1E5, logL = -Inf, n0 = 0)
+  logAns <- sumR::infiniteSum(logFunction = COMP_lpdf,
+                              parameters = Theta,
+                              eps = Eps,
+                              maxIter = M,
+                              logL = -Inf,
+                              n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
 })
@@ -128,6 +133,7 @@ test_that("Marginalised negative binomial", {
   Eta <- .08
   obsX <- 20
   Theta <- c(Mu, Phi, Eta, obsX)
+  lgL <- log(Mu) - matrixStats::logSumExp(c(log(Mu), log(Phi))) + log1p(-Eta)
   Eps <- 1E-16
   M <- 1E5
   TrueValue <- dnbinom(x = obsX, mu = Eta*Mu, size = Phi, log = TRUE)
@@ -136,7 +142,7 @@ test_that("Marginalised negative binomial", {
                               parameters =  Theta,
                               eps = Eps,
                               maxIter = M,
-                              logL = -Inf,
+                              logL = lgL,
                               n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
@@ -148,6 +154,7 @@ test_that("Marginalised negative binomial, larger overdispersion", {
   Eta <- .08
   obsX <- 20
   Theta <- c(Mu, Phi, Eta, obsX)
+  lgL <- log(Mu) - matrixStats::logSumExp(c(log(Mu), log(Phi))) + log1p(-Eta)
   Eps <- 1E-16
   M <- 1E5
   TrueValue <- dnbinom(x = obsX, mu = Eta*Mu, size = Phi, log = TRUE)
@@ -156,7 +163,7 @@ test_that("Marginalised negative binomial, larger overdispersion", {
                               parameters =  Theta,
                               eps = Eps,
                               maxIter = M,
-                              logL = -Inf,
+                              logL = lgL,
                               n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
@@ -176,12 +183,13 @@ test_that("Probability of observing a zero, sentinel model lower tolerance", {
   Theta <- Eta
   Eps <- 1E-16
   M <- 1E5
+  lgL <- log1p(-Eta)
   TrueValue <- -log(Eta)
   logAns <- sumR::infiniteSum(logFunction =  probability_noObs_lpmf,
                               parameters = Theta,
                               eps = Eps,
                               maxIter = M,
-                              logL = -Inf,
+                              logL = lgL,
                               n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
@@ -192,12 +200,13 @@ test_that("Probability of observing a zero, sentinel model slightly higher toler
   Theta <- Eta
   Eps <- 1E-15
   M <- 1E5
+  lgL <- log1p(-Eta)
   TrueValue <- -log(Eta)
   logAns <- sumR::infiniteSum(logFunction = probability_noObs_lpmf,
                                    parameters =  Theta,
                               eps = Eps,
                               maxIter = M,
-                              logL = -Inf,
+                              logL = lgL,
                               n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
@@ -209,11 +218,12 @@ test_that("Probability of observing a zero, sentinel model higher tolerance", {
   Eps <- 1E-10
   M <- 1E5
   TrueValue <- -log(Eta)
+  lgL <- log1p(-Eta)
   logAns <- sumR::infiniteSum(logFunction = probability_noObs_lpmf,
                               parameters = Theta,
                               eps = Eps,
                               maxIter = M,
-                              logL = -Inf,
+                              logL = lgL,
                               n0 = 0)
   error <- robust_difference(logAns$sum, TrueValue)
   expect_true(abs(error) <= Eps)
@@ -263,7 +273,8 @@ R0_cluster_marginal_detection_lpmf <- function(k, theta){
   x <- theta[3]
   p <- theta[4]
   ans <- ifelse(k < x, -Inf,
-                dR0(y = k, r = R0, w = omega, log = TRUE) + dbinom(x = x, size = k, prob = p, log = TRUE))
+                dR0(y = k, r = R0, w = omega, log = TRUE) +
+                  dbinom(x = x, size = k, prob = p, log = TRUE))
   return(ans)
 }
 
