@@ -3,6 +3,7 @@
 
 #include <Rinternals.h>
 #include "sumR.h"
+#include "precompiled.h"
 
 // Function evaluation
 static inline double feval(SEXP lF, SEXP rho)
@@ -36,6 +37,8 @@ static inline long double translator(R_xlen_t k, double *Theta)
   return (long double)feval(lF, envir);
 }
 
+// Selectors
+
 static inline long double algorithm_selector(
     long double logF(R_xlen_t k, double *T), double* params, double eps,
     R_xlen_t mI, double lL, R_xlen_t n0, int selector, R_xlen_t* n)
@@ -48,18 +51,53 @@ static inline long double algorithm_selector(
     return infiniteSum_(logF, params, eps, mI, lL, n0, n);
 }
 
+typedef long double (*lFptr)(R_xlen_t, double*);
+static inline lFptr precompiled_selector(unsigned int funS){
+  switch (funS){
+  case 1:
+    return negbin_marginal;
+    break;
+  case 2:
+    return noObs;
+    break;
+  case 3:
+    return COMP;
+    break;
+  case 4:
+    return dR0;
+    break;
+  case 5:
+    return powerLawDiff;
+    break;
+  case 6:
+    return negbin_sentinel;
+    break;
+  case 7:
+    return poisson_sentinel;
+    break;
+  case 8:
+    return weird_series_constL;
+    break;
+  case 9:
+    return weird_series;
+    break;
+  default:
+    error("Compiled function not found.");
+  }
+}
+
 SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
              SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo);
 
 // Wrapper for C pre-compiled code
 SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                           SEXP logL, SEXP n0, SEXP forceAlgo);
+                              SEXP logL, SEXP n0, SEXP forceAlgo);
 
 // Wrappers for the c-folding algorithm
 SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
                    SEXP n0, SEXP rho, SEXP c, SEXP N_start);
 
 SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                        SEXP n0, SEXP c, SEXP N_start);
+                                SEXP n0, SEXP c, SEXP N_start);
 
 #endif
