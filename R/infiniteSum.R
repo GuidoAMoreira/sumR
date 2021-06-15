@@ -132,16 +132,14 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
 
   if (forceAlgorithm == 1){
     if (!is.null(logL))
-      warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be
-            ignored.")
+      warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be ignored.")
     logL <- -1
   }
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   forceAlgorithm <- as.integer(forceAlgorithm)
 
   if (is.character(logFunction)){
-    if (!is.null(logL)) warning("Summation over precompiled functions uses
-                                pre-determined logL. Inputted value ignored.")
+    if (!is.null(logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
     if (logFunction == "negbin_marginal"){
       stopifnot(length(parameters) == 4)
       logL <- log(parameters[1]) -
@@ -213,11 +211,10 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
     }
   } else if(is.function(logFunction)) {
     if (is.null(logL) && forceAlgorithm != 1){
-      warning('Parameter logL is NULL. It is recommended to use the true value
-      if known. Estimating it numerically. See help("infiniteSum") for
-      details.')
+      warning('Parameter logL is NULL. It is recommended to use the true value if known. Estimating it numerically. See help("infiniteSum") for details.')
       logL <- logFunction(.Machine$integer.max, parameters) -
         logFunction(.Machine$integer.max - 1, parameters)
+      stopifnot(logL < 0)
     }
     stopifnot(logL < 0)
 
@@ -229,9 +226,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
                 n0, new.env(), forceAlgorithm,
                 PACKAGE = "sumR")
   } else {
-    warning('Argument lFun must either be the name of a precompiled function
-            or a function. See help("precompiled") to see which functions are
-            available.')
+    warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')
     return(list(sum = 0, n = 0))
   }
 

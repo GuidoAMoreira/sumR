@@ -117,18 +117,19 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
   }
 
   # Setup
-  lEps = log(epsilon)
-  N_inc = c * N_start
-  nextCheckPoint <- (n0 + N_start - 1)
+  lEps <- log(epsilon)
+  N_inc <- c * N_start
+  nextCheckPoint <- n0 + N_start - 1
   funValues <- logFunction(n0:nextCheckPoint, parameters)
   lastCheckPoint <- nextCheckPoint + 1
   nextCheckPoint <- n0 + N_inc - 1
   increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
-  n = n0 + N_inc
+  n <- n0 + N_inc
 
   # Convergence checking
-  while (matrixStats::logSumExp(increment) > lEps && n < maxIter ||
-         funValues[length(funValues)] > funValues[length(funValues) - 1]){
+  while (n < maxIter && (matrixStats::logSumExp(increment) > lEps ||
+         funValues[length(funValues)] > funValues[length(funValues) - 1] ||
+         is.infinite(funValues[length(funValues)]))){
     funValues <- c(funValues, increment)
     lastCheckPoint <- nextCheckPoint + 1
     nextCheckPoint <- nextCheckPoint + N_inc - 1
