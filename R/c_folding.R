@@ -24,6 +24,8 @@
 #' checkpoints. See 'details'.
 #' @param N_start The size of the first batch. It is multiplied by \code{c} to
 #' find the checkpoints. See 'details'.
+#' @param forceMax Logical. Set to TRUE to disable convergence checking and
+#' force the algorithm to perform \code{maxIter} iterations.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
 #' iterations, that is, the number of times the function was evaluated.
@@ -88,7 +90,7 @@
 #' @export
 infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
                                  epsilon = 1e-15, maxIter = 1e5, n0 = 0, c = 2,
-                                 N_start = 20){
+                                 N_start = 20, forceMax = FALSE){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
@@ -107,7 +109,9 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
             length(c) == 1,
             is.numeric(N_start),
             N_start > 0,
-            length(N_start) == 1)
+            length(N_start) == 1,
+            length(forceMax) == 1,
+            is.logical(as.logical(forceMax)) && !is.na(as.logical(forceMax)))
 
   if (is.character(logFunction)){
     if (logFunction == "COMP"){
@@ -129,7 +133,7 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
   # Convergence checking
   while (n < maxIter && (matrixStats::logSumExp(increment) > lEps ||
          funValues[length(funValues)] > funValues[length(funValues) - 1] ||
-         is.infinite(funValues[length(funValues)]))){
+         is.infinite(funValues[length(funValues)]) || forceMax)){
     funValues <- c(funValues, increment)
     lastCheckPoint <- nextCheckPoint + 1
     nextCheckPoint <- nextCheckPoint + N_inc - 1
@@ -146,7 +150,7 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
 #' @export
 infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
                                    epsilon = 1e-15, maxIter = 1e5, n0 = 0,
-                                   c = 2, N_start = 20){
+                                   c = 2, N_start = 20, forceMax = FALSE){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
@@ -165,64 +169,67 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
             length(c) == 1,
             is.numeric(N_start),
             N_start > 0,
-            length(N_start) == 1)
+            length(N_start) == 1,
+            length(forceMax) == 1,
+            is.logical(as.logical(forceMax)) && !is.na(as.logical(forceMax)))
 
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   c <- as.integer(c); N_start <- as.integer(N_start)
+  forceMax <- as.logical(forceMax)
 
   if (is.character(logFunction)){
     if (logFunction == "negbin_marginal"){
       stopifnot(length(parameters) == 4)
       out <- .Call("infinite_c_folding_precomp",
-                   1L, parameters, epsilon, maxIter, n0, c, N_start,
+                   1L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "noObs"){
       stopifnot(length(parameters) == 1)
       out <- .Call("infinite_c_folding_precomp",
-                   2L, parameters, epsilon, maxIter, n0, c, N_start,
+                   2L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "COMP"){
       stopifnot(length(parameters) == 2)
       out <- .Call("infinite_c_folding_precomp",
-                   3L, parameters, epsilon, maxIter, n0, c, N_start,
+                   3L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "dR0"){
       stopifnot(length(parameters) == 4)
       out <- .Call("infinite_c_folding_precomp",
-                   4L, parameters, epsilon, maxIter, n0, c, N_start,
+                   4L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "PL_diff"){
       stopifnot(length(parameters) == 3)
       out <- .Call("infinite_c_folding_precomp",
-                   5L, parameters, epsilon, maxIter, n0, c, N_start,
+                   5L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "negbin_sentinel"){
       stopifnot(length(parameters) == 3)
       out <- .Call("infinite_c_folding_precomp",
-                   6L, parameters, epsilon, maxIter, n0, c, N_start,
+                   6L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "poisson_sentinel"){
       stopifnot(length(parameters) == 2)
       out <- .Call("infinite_c_folding_precomp",
-                   7L, parameters, epsilon, maxIter, n0, c, N_start,
+                   7L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "weird_series_constL"){
       stopifnot(length(parameters) == 1)
       out <- .Call("infinite_c_folding_precomp",
-                   8L, parameters, epsilon, maxIter, n0, c, N_start,
+                   8L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
     else if (logFunction == "weird_series"){
       stopifnot(length(parameters) == 1)
       out <- .Call("infinite_c_folding_precomp",
-                   9L, parameters, epsilon, maxIter, n0, c, N_start,
+                   9L, parameters, epsilon, maxIter, n0, c, N_start, forceMax,
                    PACKAGE = "sumR")
     }
   } else if(is.function(logFunction)) {
@@ -230,7 +237,7 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
 
     out <- .Call("inf_c_folding",
                  body(f), parameters, epsilon,
-                 maxIter, n0, new.env(), c, N_start,
+                 maxIter, n0, new.env(), c, N_start, forceMax,
                  PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function

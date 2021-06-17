@@ -24,6 +24,8 @@
 #' @param n0 The sum will be approximated for the series starting at this value.
 #' @param forceAlgorithm A value to control which summation algorithm to use.
 #' See 'details'.
+#' @param forceMax Logical. Set to TRUE to disable convergence checking and
+#' force the algorithm to perform \code{maxIter} iterations.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
 #' iterations, that is, the number of times the function was evaluated.
@@ -113,7 +115,8 @@
 #' @importFrom matrixStats logSumExp
 #' @export
 infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
-                        maxIter = 1e5, logL = NULL, n0 = 0, forceAlgorithm = 0){
+                        maxIter = 1e5, logL = NULL, n0 = 0, forceAlgorithm = 0,
+                        forceMax = FALSE){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
@@ -128,18 +131,22 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
             is.numeric(n0),
             n0 >= 0,
             length(n0) == 1,
-            forceAlgorithm %in% 0:2)
+            forceAlgorithm %in% 0:2,
+            length(forceMax) == 1,
+            is.logical(as.logical(forceMax)) && !is.na(as.logical(forceMax)))
 
+  test_logL <- logL
   if (forceAlgorithm == 1){
     if (!is.null(logL))
       warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be ignored.")
-    logL <- -1
+    logL <- -1 # Any negative value to pass on to C.
   }
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   forceAlgorithm <- as.integer(forceAlgorithm)
+  forceMax <- as.logical(forceMax)
 
   if (is.character(logFunction)){
-    if (!is.null(logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
+    if (!is.null(test_logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
     if (logFunction == "negbin_marginal"){
       stopifnot(length(parameters) == 4)
       logL <- log(parameters[1]) -
@@ -147,6 +154,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
         log1p(- parameters[3])
       out <- .Call("infinite_sum_callPrecomp",
                   1L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "noObs"){
@@ -154,6 +162,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- log1p(-parameters[1])
       out <- .Call("infinite_sum_callPrecomp",
                   2L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "COMP"){
@@ -161,6 +170,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- -Inf
       out <- .Call("infinite_sum_callPrecomp",
                   3L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "dR0"){
@@ -170,6 +180,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
                                   log(parameters[1] + parameters[2]))
       out <- .Call("infinite_sum_callPrecomp",
                   4L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "PL_diff"){
@@ -177,6 +188,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- log(.9999)
       out <- .Call("infinite_sum_callPrecomp",
                   5L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "negbin_sentinel"){
@@ -186,6 +198,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
         log1p(-parameters[3])
       out <- .Call("infinite_sum_callPrecomp",
                   6L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "poisson_sentinel"){
@@ -193,6 +206,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- -Inf
       out <- .Call("infinite_sum_callPrecomp",
                   7L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "weird_series_constL"){
@@ -200,6 +214,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- log(parameters[1])
       out <- .Call("infinite_sum_callPrecomp",
                   8L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
     else if (logFunction == "weird_series"){
@@ -207,6 +222,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       logL <- -1
       out <- .Call("infinite_sum_callPrecomp",
                   9L, parameters, epsilon, maxIter, logL, n0, forceAlgorithm,
+                  forceMax,
                   PACKAGE = "sumR")
     }
   } else if(is.function(logFunction)) {
@@ -214,7 +230,6 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
       warning('Parameter logL is NULL. It is recommended to use the true value if known. Estimating it numerically. See help("infiniteSum") for details.')
       logL <- logFunction(.Machine$integer.max, parameters) -
         logFunction(.Machine$integer.max - 1, parameters)
-      stopifnot(logL < 0)
     }
     stopifnot(logL < 0)
 
@@ -223,7 +238,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
     out <- .Call("inf_sum",
                 body(f), parameters, epsilon,
                 maxIter, logL,
-                n0, new.env(), forceAlgorithm,
+                n0, new.env(), forceAlgorithm, forceMax,
                 PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')
