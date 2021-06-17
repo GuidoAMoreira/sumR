@@ -12,7 +12,8 @@ infiniteSum(
   maxIter = 1e+05,
   logL = NULL,
   n0 = 0,
-  forceAlgorithm = 0
+  forceAlgorithm = 0,
+  forceMax = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ must be smaller than 1, or smaller than 0 in the log scale. See 'details'.}
 
 \item{forceAlgorithm}{A value to control which summation algorithm to use.
 See 'details'.}
+
+\item{forceMax}{Logical. Set to TRUE to disable convergence checking and
+force the algorithm to perform \code{maxIter} iterations.}
 }
 \value{
 A list with two named members, \code{sum} and \code{n}. \code{sum} is
@@ -115,7 +119,7 @@ an \code{R} function. In fact, it has been observed to be dozens time faster.
 
 The advanced user can program their own precompiled functions and use the
 package's summation algorithms by linking the appropriate header file. See
-the \href{github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
+the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
 }
 \examples{
 ## Define some function that is known to pass the ratio test.
