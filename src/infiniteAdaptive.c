@@ -3,7 +3,8 @@
 
 long double infiniteAdaptive_(long double logFun(R_xlen_t k, double *Theta),
                        double *params, double eps,
-                       R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
+                       R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n,
+                       int forceMax)
 {
   // Declaration
   R_xlen_t nMax;
@@ -35,15 +36,20 @@ long double infiniteAdaptive_(long double logFun(R_xlen_t k, double *Theta),
   if (*n > 1)
     partial_logSumExp(logFunVal, *n - 2, maxA, &c, 0, &total);
 
-  do
-    logFunVal[++*n] = logFun(++n0, params);
-  while  ( (log1mL ? // if L = 0 there's a simpler convergence check
-              delta(logFunVal[*n] + logFunVal[*n - 1] -
-              Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]),
-              logFunVal[*n], log1mL) >= lEps :
-              (logFunVal[*n - 1] - logFunVal[*n] < Rf_log1pexp(logFunVal[*n] -
-                lEps))) &
-                (*n < maxIter));
+  if (forceMax)
+    do
+      logFunVal[++*n] = logFun(++n0, params);
+    while (*n < maxIter);
+  else
+    do
+      logFunVal[++*n] = logFun(++n0, params);
+    while  ( (log1mL ? // if L = 0 there's a simpler convergence check
+                delta(logFunVal[*n] + logFunVal[*n - 1] -
+                Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]),
+                logFunVal[*n], log1mL) >= lEps :
+                (logFunVal[*n - 1] - logFunVal[*n] < Rf_log1pexp(logFunVal[*n] -
+                  lEps))) &
+                  (*n < maxIter));
   // Braden bounds
   KahanSum(&totalBack, expl(logFunVal[*n] - log1mL - LOG_2 - maxA), &cb);
   KahanSum(&totalBack, expl(logFunVal[*n] + logFunVal[*n - 1] -
