@@ -9,7 +9,7 @@ devtools::install_github("GuidoAMoreira/sumR")
 
 Package `sumR` facilitates using its low-level C function in other packages. In order to use it, these steps are necessary:
 
-1. Make sure that the DESCRIPTION file in your package includes sumR in its **LinkingTo** and **Imports** fields.
+1. Make sure that the DESCRIPTION file in your package includes `sumR` in its **LinkingTo** and **Imports** fields.
 2. Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as mypackage-package.R, before running roxygen2::roxygenize().
 3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
 4. Use sumR's functions in your code.
