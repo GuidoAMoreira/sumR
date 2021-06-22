@@ -46,7 +46,7 @@ finiteSum <- function(logFunction, parameters = numeric(), n, n0 = 0){
                  PACKAGE = "sumR")
   } else
     out <- list(
-      sum = matrixStats::logSumExp(logFunction(n0:(n0 + n), parameters)),
+      sum = matrixStats::logSumExp(sort(logFunction(n0:(n0 + n), parameters))),
       n = n)
 
   out$sum
