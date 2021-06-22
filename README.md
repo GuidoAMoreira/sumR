@@ -69,4 +69,4 @@ Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `
 
 When making a wrapper function, we have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable in some systems than straight up using Rf_ScalarReal on the long double variable.
 
-See the help documentation in the sumR package for information about the interfaced function arguments.
+See the help documentation in the sumR package for information about the interfaced function arguments. `sumNTimes` is documented under `finiteSum`.
