@@ -138,7 +138,7 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
   }
   funValues <- c(funValues, increment)
 
-  list(sum = matrixStats::logSumExp(funValues),
+  list(sum = matrixStats::logSumExp(sort(funValues)),
        n = n)
 }
 
