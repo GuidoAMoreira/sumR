@@ -12,8 +12,7 @@ infiniteSum(
   maxIter = 1e+05,
   logL = NULL,
   n0 = 0,
-  forceAlgorithm = 0,
-  forceMax = FALSE
+  forceAlgorithm = 0
 )
 }
 \arguments{
@@ -43,9 +42,6 @@ must be smaller than 1, or smaller than 0 in the log scale. See 'details'.}
 
 \item{forceAlgorithm}{A value to control which summation algorithm to use.
 See 'details'.}
-
-\item{forceMax}{Logical. Set to TRUE to disable convergence checking and
-force the algorithm to perform \code{maxIter} iterations.}
 }
 \value{
 A list with two named members, \code{sum} and \code{n}. \code{sum} is

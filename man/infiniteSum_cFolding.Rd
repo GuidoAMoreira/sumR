@@ -13,8 +13,7 @@ infiniteSum_cFolding(
   maxIter = 1e+05,
   n0 = 0,
   c = 2,
-  N_start = 20,
-  forceMax = FALSE
+  N_start = 20
 )
 
 infiniteSum_cFolding_C(
@@ -24,8 +23,7 @@ infiniteSum_cFolding_C(
   maxIter = 1e+05,
   n0 = 0,
   c = 2,
-  N_start = 20,
-  forceMax = FALSE
+  N_start = 20
 )
 }
 \arguments{
@@ -54,9 +52,6 @@ checkpoints. See 'details'.}
 
 \item{N_start}{The size of the first batch. It is multiplied by \code{c} to
 find the checkpoints. See 'details'.}
-
-\item{forceMax}{Logical. Set to TRUE to disable convergence checking and
-force the algorithm to perform \code{maxIter} iterations.}
 }
 \value{
 A list with two named members, \code{sum} and \code{n}. \code{sum} is
