@@ -78,7 +78,7 @@ long double sumNTimes(
                       double*, R_xlen_t, R_xlen_t) = NULL;
   fun = (long double(*)(long double (R_xlen_t k, double *Theta),
                      double*, R_xlen_t, R_xlen_t))
-    R_GetCCallable("sumR", "infiniteCFolding_");
+    R_GetCCallable("sumR", "sumNTimes_");
   return fun(logFun, params, n, n0);
 }
 
