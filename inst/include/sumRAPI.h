@@ -73,13 +73,13 @@ long double infiniteCFolding(
 // sum N times
 long double sumNTimes(
     long double logFun(R_xlen_t k, double *Theta),
-    double *params, R_xlen_t N, R_xlen_t n0) {
+    double *params, R_xlen_t n, R_xlen_t n0) {
   static long double (*fun)(long double (R_xlen_t k, double *Theta),
                       double*, R_xlen_t, R_xlen_t) = NULL;
   fun = (long double(*)(long double (R_xlen_t k, double *Theta),
                      double*, R_xlen_t, R_xlen_t))
     R_GetCCallable("sumR", "infiniteCFolding_");
-  return fun(logFun, params, N, n0);
+  return fun(logFun, params, n, n0);
 }
 
 #ifdef __cplusplus
