@@ -3,8 +3,7 @@
 
 long double infiniteSumToThreshold_(long double logFun(R_xlen_t k, double *Theta),
                               double *params, double eps,
-                              R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n,
-                              int forceMax)
+                              R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n)
 {
   // Declaration
   R_xlen_t nMax;
@@ -25,7 +24,7 @@ long double infiniteSumToThreshold_(long double logFun(R_xlen_t k, double *Theta
   if (*n == maxIter)
   {
     partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
-    return logFunVal[*n] + log1p(total);
+    return logFunVal[*n] + log1pl(total);
   }
 
   // I know which is the max due to the stop criteria.
@@ -38,7 +37,7 @@ long double infiniteSumToThreshold_(long double logFun(R_xlen_t k, double *Theta
   // Calculate the tail. Only loop once.
   do
     logFunVal[++*n] = logFun(++n0, params);
-  while ((logFunVal[*n] >= lEps || forceMax) && (*n <= (maxIter - 1)));
+  while (logFunVal[*n] >= lEps && (*n <= (maxIter - 1)));
   partial_logSumExp(&logFunVal[nMax], *n - nMax, maxA, &cb, 1, &totalBack);
 
   return maxA + log1pl(total + totalBack);

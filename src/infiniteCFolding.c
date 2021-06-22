@@ -4,7 +4,7 @@
 long double infiniteCFolding_(long double logFun(R_xlen_t k, double *Theta),
                                  double *params, double eps,
                                  R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n,
-                                 R_xlen_t c, R_xlen_t N_start, int forceMax)
+                                 R_xlen_t c, R_xlen_t N_start)
 {
   // Declaration
   R_xlen_t N, N_inc = N_start * c;
@@ -42,7 +42,7 @@ long double infiniteCFolding_(long double logFun(R_xlen_t k, double *Theta),
   partial_logSumExp(checkStart, N, maxA, &cc, 0, &S);
 
   // Calculate the tail. Only loop once.
-  while ((logl(S) >= lEps || forceMax) && *n < maxIter)
+  while (logl(S) >= lEps && *n < maxIter)
   {
     partial += S;
     for (N = 0, S = 0.; N < N_inc; N++)

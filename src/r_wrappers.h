@@ -41,14 +41,14 @@ static inline long double translator(R_xlen_t k, double *Theta)
 
 static inline long double algorithm_selector(
     long double logF(R_xlen_t k, double *T), double* params, double eps,
-    R_xlen_t mI, double lL, R_xlen_t n0, int selector, R_xlen_t* n, int fM)
+    R_xlen_t mI, double lL, R_xlen_t n0, int selector, R_xlen_t* n)
 {
   if (selector == 2)
-    return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n, fM);
+    return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n);
   else if (selector == 1)
-    return infiniteSumToThreshold_(logF, params, eps, mI, n0, n, fM);
+    return infiniteSumToThreshold_(logF, params, eps, mI, n0, n);
   else
-    return infiniteSum_(logF, params, eps, mI, lL, n0, n, fM);
+    return infiniteSum_(logF, params, eps, mI, lL, n0, n);
 }
 
 typedef long double (*lFptr)(R_xlen_t, double*);
@@ -87,17 +87,20 @@ static inline lFptr precompiled_selector(unsigned int funS){
 }
 
 SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-             SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo, SEXP forceMax);
+             SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo);
 
 // Wrapper for C pre-compiled code
 SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                              SEXP logL, SEXP n0, SEXP forceAlgo, SEXP forceMax);
+                              SEXP logL, SEXP n0, SEXP forceAlgo);
 
 // Wrappers for the c-folding algorithm
 SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-                   SEXP n0, SEXP rho, SEXP c, SEXP N_start, SEXP forceMax);
+                   SEXP n0, SEXP rho, SEXP c, SEXP N_start);
 
 SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                                SEXP n0, SEXP c, SEXP N_start, SEXP forceMax);
+                                SEXP n0, SEXP c, SEXP N_start);
+
+// Wrappers for the fixed iterations algorithm
+SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0);
 
 #endif

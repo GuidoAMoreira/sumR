@@ -15,4 +15,6 @@ void R_init_sumR(DllInfo *info)
                       (DL_FUNC) &infiniteAdaptive_);
   R_RegisterCCallable("sumR", "infiniteCFolding_",
                       (DL_FUNC) &infiniteCFolding_);
+  R_RegisterCCallable("sumR", "sumNTimes_",
+                      (DL_FUNC) &sumNTimes_);
 }
