@@ -61,11 +61,12 @@ long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *p
 long double infiniteSumToThreshold(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n);
 long double infiniteAdaptive(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
 long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start);
+long double sumNTimes(long double logFun(R_xlen_t k, double *Theta), double *params, R_xlen_t n, R_xlen_t n0);
 ```
 
 ## Notes
 Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `infiniteAdaptive` depending on the value of `logL` and returns the result of the respectively chosen function.
 
-We have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable.
+When making a wrapper function, we have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable in some systems than straight up using Rf_ScalarReal on the long double variable.
 
 See the help documentation in the sumR package for information about the interfaced function arguments.
