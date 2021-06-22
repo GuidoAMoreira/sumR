@@ -157,7 +157,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
     out <- .Call("inf_sum",
                 body(f), parameters, epsilon,
                 maxIter, logL,
-                n0, new.env(), forceAlgorithm, forceMax,
+                n0, new.env(), forceAlgorithm,
                 PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')
