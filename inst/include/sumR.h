@@ -9,29 +9,29 @@ extern "C" {
 #endif
 
 // Approximates infinite sum with an adaptive truncation
-long double infiniteAdaptive_(long double (R_xlen_t k, double *Theta), double*,
-                        double, R_xlen_t, double, R_xlen_t, R_xlen_t*);
+long double infiniteAdaptive_(long double (long k, double *Theta), double*,
+                        double, long, double, long, long*);
 
 // Approximates infinite sum by summing until added value is smaller than threshold
-long double infiniteSumToThreshold_(long double (R_xlen_t k, double *Theta),
-                        double*, double, R_xlen_t, R_xlen_t, R_xlen_t*);
+long double infiniteSumToThreshold_(long double (long k, double *Theta),
+                        double*, double, long, long, long*);
 
 // Approximates infinite sum by summing in batches until the batch addes up to
 // less than the desired margin
-long double infiniteCFolding_(long double (R_xlen_t k, double *Theta),
-                              double*, double, R_xlen_t, R_xlen_t, R_xlen_t*,
-                              R_xlen_t, R_xlen_t);
+long double infiniteCFolding_(long double (long k, double *Theta),
+                              double*, double, long, long, long*,
+                              long, long);
 
 // Dispatches infiniteAdaptive or inviniteSumToThreshold based on logL value
 long double infiniteSum_(
-    long double logFun(R_xlen_t k, double *Theta),
+    long double logFun(long k, double *Theta),
     double *params, double eps,
-    R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
+    long maxIter, double logL, long n0, long* n);
 
 // Sum N times with no convergence checking
 long double sumNTimes_(
-    long double logFun(R_xlen_t k, double *Theta),
-    double *params, R_xlen_t N, R_xlen_t n0);
+    long double logFun(long k, double *Theta),
+    double *params, long N, long n0);
 
 #ifdef __cplusplus
 }
