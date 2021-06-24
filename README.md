@@ -18,14 +18,14 @@ Package `sumR` facilitates using its low-level C function in other packages. In 
 3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
 4. Use sumR's functions in your code.
 
-The following code exemplifies a C file in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions. `R_xlen_t` is an alias for `long`.
+The following code exemplifies a C file in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions.
 
 ```C
 #include <Rinternals.h>
-#include <Rmath.h> // Required for the log1p and log1pl functions
+#include <Rmath.h> // Required for the log1pl functions
 #include <sumRAPI.h>
 
-long double some_series(R_xlen_t n, double *p)
+long double some_series(long n, double *p)
 {
   long double out = n * log1pl(-p[0]);
   return out;
@@ -35,7 +35,7 @@ SEXP sum_series(SEXP param)
 {
   double parameter[1];
   long double r;
-  R_xlen_t n; // Number of iterations. Doesn't require initialization.
+  long n; // Number of iterations. Doesn't require initialization.
 
   parameter[0] = REAL(param)[0];
 
@@ -60,10 +60,10 @@ The interfaced functions from sumR are:
 
 ```C
 long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
-long double infiniteSumToThreshold(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n);
-long double infiniteAdaptive(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
-long double infiniteCFolding(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n, R_xlen_t c, R_xlen_t N_start);
-long double sumNTimes(long double logFun(R_xlen_t k, double *Theta), double *params, R_xlen_t n, R_xlen_t n0);
+long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n);
+long double infiniteAdaptive(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
+long double infiniteCFolding(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long c, long N_start);
+long double sumNTimes(long double logFun(long k, double *Theta), double *params, long n, long n0);
 ```
 
 ## Notes
