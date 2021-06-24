@@ -64,7 +64,7 @@ The following code exemplifies a C file in a package after steps 1. and 2. above
 
 ```C
 #include <Rinternals.h>
-#include <Rmath.h> // Required for the log1pl functions
+#include <Rmath.h> // Required for the log1p and log1pl functions
 #include <sumRAPI.h>
 
 long double some_series(long n, double *p)
