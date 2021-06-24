@@ -59,7 +59,7 @@ sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
 The interfaced functions from sumR are:
 
 ```C
-long double infiniteSum(long double logFun(R_xlen_t k, double *Theta), double *params, double eps, R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n);
+long double infiniteSum(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
 long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n);
 long double infiniteAdaptive(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
 long double infiniteCFolding(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long c, long N_start);
