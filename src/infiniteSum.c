@@ -2,9 +2,9 @@
 #include "math.h"
 
 long double infiniteSum_(
-    long double logFun(R_xlen_t k, double *Theta),
+    long double logFun(long k, double *Theta),
     double *params, double eps,
-    R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
+    long maxIter, double logL, long n0, long* n)
 {return logL < - LOG_2 ?
   infiniteSumToThreshold_(logFun, params, eps, maxIter, n0, n) :
   infiniteAdaptive_(logFun, params, eps, maxIter, logL, n0, n);}

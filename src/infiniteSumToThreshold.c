@@ -1,12 +1,12 @@
 #include "sumR.h"
 #include "math.h"
 
-long double infiniteSumToThreshold_(long double logFun(R_xlen_t k, double *Theta),
+long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
                               double *params, double eps,
-                              R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n)
+                              long maxIter, long n0, long* n)
 {
   // Declaration
-  R_xlen_t nMax;
+  long nMax;
   long double maxA, lEps = log(eps), logFunVal[maxIter + 1], total = 0.,
     totalBack = 0., c = 0., cb = 0.;
   *n = 0;

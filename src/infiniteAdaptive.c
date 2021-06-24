@@ -3,10 +3,10 @@
 
 long double infiniteAdaptive_(long double logFun(R_xlen_t k, double *Theta),
                        double *params, double eps,
-                       R_xlen_t maxIter, double logL, R_xlen_t n0, R_xlen_t* n)
+                       R_xlen_t maxIter, double logL, long n0, long* n)
 {
   // Declaration
-  R_xlen_t nMax;
+  long nMax;
   long double maxA, logFunVal[maxIter + 1], lEps = log(eps) + LOG_2, total = 0.,
     totalBack = 0., log1mL = Rf_logspace_sub(0, logL), c = 0., cb = 0.;
   *n = 0;

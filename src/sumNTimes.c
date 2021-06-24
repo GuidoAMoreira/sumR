@@ -1,12 +1,12 @@
 #include "sumR.h"
 #include "math.h"
 
-long double sumNTimes_(long double logFun(R_xlen_t, double *Theta),
-                      double *params, R_xlen_t N, R_xlen_t n0)
+long double sumNTimes_(long double logFun(long, double *Theta),
+                      double *params, long N, long n0)
 {
   // Declaration
   long double maxA, logFunVal[N + 1], total = 0., totalBack = 0., c = 0., cb = 0.;
-  R_xlen_t n = 0, nMax;
+  long n = 0, nMax;
 
   // Finding function max.
   logFunVal[n] = logFun(n0, params);

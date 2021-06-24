@@ -6,7 +6,7 @@ SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
 {
   defineVar(install("Theta"), params, rho);
   long double out;
-  R_xlen_t n;
+  long n;
 
   // Global variables declared in r_wrappers.h. They are used in translator
   envir = rho;
@@ -23,7 +23,7 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
                               SEXP logL, SEXP n0, SEXP forceAlgo)
 {
   long double out;
-  R_xlen_t n;
+  long n;
 
   out = algorithm_selector(precompiled_selector(INTEGER(lF)[0]),
                            REAL(params), REAL(epsilon)[0],
@@ -42,7 +42,7 @@ SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
 {
   defineVar(install("Theta"), params, rho);
   long double out;
-  R_xlen_t n;
+  long n;
 
   // Global variables declared in r_wrappers.h. They are used in translator
   envir = rho;
@@ -59,7 +59,7 @@ SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon,
                                 SEXP maxIter, SEXP n0, SEXP c, SEXP N_start)
 {
   long double out;
-  R_xlen_t n;
+  long n;
 
 
   out = infiniteCFolding_(precompiled_selector(INTEGER(lF)[0]),
@@ -75,7 +75,7 @@ SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon,
 SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0)
 {
   long double out;
-  R_xlen_t n = INTEGER(N)[0];
+  long n = INTEGER(N)[0];
 
   out = sumNTimes_(precompiled_selector(INTEGER(lF)[0]), REAL(params),
                    n, INTEGER(n0)[0]);

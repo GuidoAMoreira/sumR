@@ -1,7 +1,7 @@
 #include <Rinternals.h>
 #include "math.h"
 
-void partial_logSumExp(long double* fun, R_xlen_t evals, long double maxA,
+void partial_logSumExp(long double* fun, long evals, long double maxA,
                        long double* c, int backwards, long double* res)
 {
   // Go backwards if the series is decreasing and forward otherwise.

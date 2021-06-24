@@ -6,23 +6,23 @@
 extern "C" {
 #endif
 
-long double negbin_marginal(R_xlen_t k, double *Theta);
+long double negbin_marginal(long k, double *Theta);
 
-long double noObs(R_xlen_t k, double *Theta);
+long double noObs(long k, double *Theta);
 
-long double COMP(R_xlen_t k, double *Theta);
+long double COMP(long k, double *Theta);
 
-long double dR0(R_xlen_t k, double *Theta);
+long double dR0(long k, double *Theta);
 
-long double powerLawDiff(R_xlen_t k, double *Theta);
+long double powerLawDiff(long k, double *Theta);
 
-long double negbin_sentinel(R_xlen_t k, double *Theta);
+long double negbin_sentinel(long k, double *Theta);
 
-long double poisson_sentinel(R_xlen_t k, double *Theta);
+long double poisson_sentinel(long k, double *Theta);
 
-long double weird_series_constL(R_xlen_t k, double *Theta);
+long double weird_series_constL(long k, double *Theta);
 
-long double weird_series(R_xlen_t k, double *Theta);
+long double weird_series(long k, double *Theta);
 
 #ifdef __cplusplus
 }

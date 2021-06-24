@@ -12,7 +12,7 @@ double Rf_logspace_sub(double, double);
 double Rf_log1pexp(double);
 
 // Auxiliary function. NOT A FULL logSumExp IMPLEMENTATION
-void partial_logSumExp(long double*, R_xlen_t, long double,
+void partial_logSumExp(long double*, long, long double,
                        long double*, int, long double*);
 
 // This function helps reduce the floating point rounding error.

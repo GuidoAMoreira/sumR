@@ -1,13 +1,13 @@
 #include "sumR.h"
 #include "math.h"
 
-long double infiniteCFolding_(long double logFun(R_xlen_t k, double *Theta),
+long double infiniteCFolding_(long double logFun(long k, double *Theta),
                                  double *params, double eps,
-                                 R_xlen_t maxIter, R_xlen_t n0, R_xlen_t* n,
-                                 R_xlen_t c, R_xlen_t N_start)
+                                 long maxIter, long n0, long* n,
+                                 long c, long N_start)
 {
   // Declaration
-  R_xlen_t N, N_inc = N_start * c;
+  long N, N_inc = N_start * c;
   long double maxA, lEps = logl(eps), logFunVal[maxIter + 1],
           partial = 0., *checkStart = logFunVal, S = 0., cc = 0., total = 0;
   *n = 0;

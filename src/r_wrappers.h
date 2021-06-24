@@ -10,7 +10,7 @@ static inline double feval(SEXP lF, SEXP rho)
 {return REAL(eval(lF, rho))[0];}
 
 // Function return macro
-static inline SEXP retFun(double res, R_xlen_t mI)
+static inline SEXP retFun(double res, long mI)
 {
   SEXP out = PROTECT(allocVector(VECSXP,2));
   SET_VECTOR_ELT(out, 0, Rf_ScalarReal(res));
@@ -31,7 +31,7 @@ static inline SEXP retFun(double res, R_xlen_t mI)
 SEXP envir, lF;
 
 // Wrapping sums for functions defined at the R level
-static inline long double translator(R_xlen_t k, double *Theta)
+static inline long double translator(long k, double *Theta)
 {
   defineVar(install("k"), Rf_ScalarInteger(k), envir);
   return (long double)feval(lF, envir);
@@ -40,8 +40,8 @@ static inline long double translator(R_xlen_t k, double *Theta)
 // Selectors
 
 static inline long double algorithm_selector(
-    long double logF(R_xlen_t k, double *T), double* params, double eps,
-    R_xlen_t mI, double lL, R_xlen_t n0, int selector, R_xlen_t* n)
+    long double logF(long k, double *T), double* params, double eps,
+    long mI, double lL, long n0, int selector, long* n)
 {
   if (selector == 2)
     return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n);
@@ -51,7 +51,7 @@ static inline long double algorithm_selector(
     return infiniteSum_(logF, params, eps, mI, lL, n0, n);
 }
 
-typedef long double (*lFptr)(R_xlen_t, double*);
+typedef long double (*lFptr)(long, double*);
 static inline lFptr precompiled_selector(unsigned int funS){
   switch (funS){
   case 1:
