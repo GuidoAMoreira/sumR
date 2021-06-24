@@ -1,5 +1,7 @@
 # sumR <img src='man/figures/logo.jpeg' align="right" height="139" />
 
+Approximate infinite series with a guaranteed error margin!
+
 # Installation
 Installing this package in R from this GitHub page is straightforward. Make sure you have the package `devtool` installed and that your Operating System has a C compiler that R can access. This is automatically true in a standard installation in Linux, requires Xcode or gcc (depends on MacOS version) in Mac, and Rtools in Windows. Then, just run:
 
