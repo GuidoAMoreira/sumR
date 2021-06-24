@@ -95,7 +95,7 @@ Then your package can have an R wrapper function such as:
 ```R
 #' Wrapper function that sums a series for a given parameter
 #' @export
-sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
+sumSeries <- function(p) .Call("sum_series", param = p, PACKAGE = "mypackage")
 ```
 
 The this function can be tested after the package has been installed with:
