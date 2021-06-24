@@ -5,6 +5,7 @@
 \alias{sumR}
 \title{sumR: Approximate series withing a desired error margin}
 \description{
+\if{html}{\figure{logo.jpeg}{options: width="120px"}}
 The \pkg{sumR} package provides some \code{R} functions that allow the
 user to approximate the sum of series. It also interfaces the low level
 \code{C} functions that perform the actual summation, so that other packages
