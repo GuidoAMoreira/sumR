@@ -9,9 +9,51 @@ Installing this package in R from this GitHub page is straightforward. Make sure
 devtools::install_github("GuidoAMoreira/sumR")
 ```
 
-# Interfacing low-level summation
+# Interfacing low-level summation with Rcpp
 
-Package `sumR` facilitates using its low-level C function in other packages. In order to use it, these steps are necessary:
+It is possible to define a series at the C level and use a `Rcpp` wrapper function. For this to be possible, all that is needed is the use of the *depends* Rcpp attribute and including the adequate header. The following code at the R level exports a function that sums a series.
+
+```R
+library(Rcpp)
+
+sourceCpp(code='
+#include <Rcpp.h>
+
+// [[Rcpp::depends(sumR)]]
+
+#include <sumRAPI.h>
+
+long double some_series(long n, double *p)
+{
+  long double out = n * log1pl(-p[0]);
+  return out;
+}
+
+// [[Rcpp::export]]
+double sum_series(double param)
+{
+  double parameter[1];
+  long double r;
+  long n; // Number of iterations. Does not require initialization.
+
+  parameter[0] = param;
+
+  r = infiniteSum(some_series, parameter, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
+  
+  Rcpp::Rcout << "Summation took " << n << " iterations to converge.\\n";
+
+  return (double)r;
+}
+')
+
+sum_series(0.08)
+```
+
+The available functions and their arguments are listed below.
+
+# Interfacing low-level summation with another package
+
+Package `sumR` facilitates using its low-level C or C++ function in other packages. In order to use it, these steps are necessary:
 
 1. Make sure that the DESCRIPTION file in your package includes `sumR` in its **LinkingTo** and **Imports** fields.
 2. Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as mypackage-package.R, before running `roxygen2::roxygenize()`.
@@ -56,6 +98,8 @@ Then your package can have an R wrapper function such as:
 sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
 ```
 
+# Available sumR functions
+
 The interfaced functions from sumR are:
 
 ```C
@@ -72,3 +116,5 @@ Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `
 When making a wrapper function, we have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable in some systems than straight up using Rf_ScalarReal on the long double variable.
 
 See the help documentation in the sumR package for information about the interfaced function arguments. `sumNTimes` is documented under `finiteSum`.
+
+Since all `sumR` code is in C, a C++ functor cannot be passed as the logFun argument, not even in a templated wrapper.
