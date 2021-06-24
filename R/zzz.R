@@ -29,8 +29,8 @@ precomp_select <- function(name, pars){
       matrixStats::logSumExp(c(log(pars[1]), log(pars[2]))) +
       log1p(-pars[3])
     nmbr = 6L
-  } else if (logFunction == "poisson_sentinel"){
-    stopifnot(length(parameters) == 2)
+  } else if (name == "poisson_sentinel"){
+    stopifnot(length(pars) == 2)
     logL <- -Inf
     nmbr = 7L
   } else if (name == "weird_series_constL"){
