@@ -98,6 +98,12 @@ Then your package can have an R wrapper function such as:
 sumSeries <- function(p) .Call("sum_series", p, PACKAGE = "mypackage")
 ```
 
+The this function can be tested after the package has been installed with:
+
+```R
+sumSeries(0.08)
+```
+
 # Available sumR functions
 
 The interfaced functions from sumR are:
