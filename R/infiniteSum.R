@@ -145,11 +145,8 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
                  epsilon, maxIter, selection$lL, n0, forceAlgorithm,
                  PACKAGE = "sumR")
   } else if(is.function(logFunction)) {
-    if (is.null(logL) && forceAlgorithm != 1){
+    if (is.null(logL) && forceAlgorithm != 1)
       stop('Parameter logL is NULL. Please provide its value. See help("infiniteSum") for details.')
-      logL <- logFunction(.Machine$integer.max, parameters) -
-        logFunction(.Machine$integer.max - 1, parameters)
-    }
     stopifnot(logL < 0)
 
     f <- function(k, Theta) logFunction(k, Theta)
