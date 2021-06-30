@@ -9,16 +9,16 @@ extern "C" {
 #endif
 
 // Approximates infinite sum with an adaptive truncation
-long double infiniteAdaptive_(long double (long k, double *Theta), double*,
+long double infiniteAdaptive_(long double logFun(long k, double *Theta), double*,
                         double, long, double, long, long*);
 
 // Approximates infinite sum by summing until added value is smaller than threshold
-long double infiniteSumToThreshold_(long double (long k, double *Theta),
+long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
                         double*, double, long, long, long*);
 
 // Approximates infinite sum by summing in batches until the batch addes up to
 // less than the desired margin
-long double infiniteCFolding_(long double (long k, double *Theta),
+long double infiniteCFolding_(long double logFun(long k, double *Theta),
                               double*, double, long, long, long*,
                               long, long);
 
