@@ -2,6 +2,7 @@
 #define __SUMR_MATH_H__
 
 #include <Rinternals.h>
+#include <Rmath.h>
 
 #ifndef LOG_2
 #define LOG_2 0.69314718055994530941723212145817656831
