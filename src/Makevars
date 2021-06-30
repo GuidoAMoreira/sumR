@@ -1,3 +1,2 @@
 PKG_CPPFLAGS = -I../inst/include
-CCFLAGS+=-O1
-CXXFLAGS+=-O1
+CCFLAGS+=-Wall
