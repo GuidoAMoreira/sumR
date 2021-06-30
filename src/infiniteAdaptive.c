@@ -1,9 +1,9 @@
 #include "sumR.h"
 #include "math.h"
 
-long double infiniteAdaptive_(long double (long k, double *Theta),
-                       double*, double,
-                       long, double, long, long*)
+long double infiniteAdaptive_(long double logFun(long k, double *Theta),
+                       double *params, double eps,
+                       long maxIter, double logL, long n0, long *n)
 {
   // Declaration
   long nMax;
