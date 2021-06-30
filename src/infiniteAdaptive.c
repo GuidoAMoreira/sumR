@@ -1,7 +1,7 @@
 #include "sumR.h"
 #include "math.h"
 
-long double infiniteAdaptive_(long double logFun(R_xlen_t k, double *Theta),
+long double infiniteAdaptive_(long double logFun(long k, double *Theta),
                        double *params, double eps,
                        R_xlen_t maxIter, double logL, long n0, long* n)
 {
