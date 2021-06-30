@@ -9,8 +9,8 @@ extern "C" {
 #endif
 
 // Approximates infinite sum with an adaptive truncation
-long double infiniteAdaptive_(long double logFun(long k, double *Theta), double *params,
-                        double eps, long maxIter, double logL, long n0, long *n);
+long double infiniteAdaptive_(long double (long k, double *Theta), double*,
+                        double, long, double, long, long*);
 
 // Approximates infinite sum by summing until added value is smaller than threshold
 long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
