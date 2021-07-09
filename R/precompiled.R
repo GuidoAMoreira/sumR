@@ -26,7 +26,9 @@
 #'
 #' \ifelse{html}{\out{<center> a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup> </center>}}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
 #'
-#' \deqn{L = 0, log(L) = -\infty.}
+#' \deqn{L = 0, log(L) = -\infty,}
+#'
+#' for \eqn{\lambda > 0} and \eqn{\nu > 0}.
 #'
 #' When \eqn{\nu = 1}, this series reduces to the Poisson distribution kernel
 #' and the sum (in the log scale) is known to be \eqn{\lambda}. When
