@@ -45,6 +45,25 @@
 #' - String to access the precompiled function: \code{"COMP"}.
 #'
 #' - parameter vector: \code{c(lambda, nu)}.
+#'
+#' @section Double Poisson normalizing constant:
+#' This series is the kernel of the double Poisson distribution, which is a
+#' special case of the double exponential family. Its form is
+#'
+#' \ifelse{html}{\out{<center> a<sub>n</sub> = φ<sup>0.5</sup> e<sup>-φ µ</sup> (e<sup>-n</sup>n<sup>n</sup> / n!)(eµ / n)<sup>φ n</sup> </center>}}{\deqn{a_n = \sqrt{\phi}e^{-\phi\mu}\left(\frac{e^{-n}n^n}{n!}\right)\left(\frac{e\mu}{n}\right)^{\phi n},}}
+#'
+#' \deqn{L = 0, log(L) = -\infty,}
+#'
+#' for \eqn{\lambda > 0} and \eqn{\phi > 0}.
+#'
+#' When \eqn{\phi = 1}, this series reduces to the Poisson distribution kernel
+#' and the sum (in the log scale) is known to be 0.
+#'
+#' - String to acccess the precompiled function: \code{"double_poisson"}.
+#'
+#' - parameter vector: \code{c(mu, phi)}
+#'
 #' @name precompiled
-#' @seealso \code{\link{infiniteSum}}
+#' @seealso \code{\link{infiniteSum}}, \code{\link{finiteSum}} and
+#' \code{\link{infiniteSum_cFolding}}
 NULL
