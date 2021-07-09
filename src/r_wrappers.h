@@ -60,65 +60,6 @@ static inline long double algorithm_selector(lFptr logF, double *params,
     return infiniteSum_(logF, params, eps, mI, lL, n0, n);
 }
 
-static inline lFptr precompiled_selector(SEXP funS, double *logL,
-                                         double *params, R_xlen_t size){
-
-  if compareStr("negbin_marginal"){
-    checkSize(size, 4);
-    *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
-      log1p(-params[2]);
-    return negbin_marginal;
-  }
-  if compareStr("noObs"){
-    checkSize(size, 1);
-    *logL = log1p(-params[0]);
-    return noObs;
-  }
-  if compareStr("COMP"){
-    checkSize(size, 2);
-    *logL = -INFINITY;
-    return COMP;
-  }
-  if compareStr("dR0"){
-    checkSize(size, 4);
-    *logL = log(params[0]) + log1p(-params[3]) +
-      (1 + params[1]) * (log1p(params[1]) - log(params[0] + params[1]));
-    return dR0;
-  }
-  if compareStr("powerLawDiff"){
-    checkSize(size, 3);
-    *logL = log(0.9999);
-    return powerLawDiff;
-  }
-  if compareStr("negbin_sentinel"){
-    checkSize(size, 3);
-    *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
-      log1p(-params[2]);
-    return negbin_sentinel;
-  }
-  if compareStr("poisson_sentinel"){
-    checkSize(size, 2);
-    *logL = -INFINITY;
-    return poisson_sentinel;
-  }
-  if compareStr("weird_series_constL"){
-    checkSize(size, 1);
-    *logL = log(params[0]);
-    return weird_series_constL;
-  }
-  if compareStr("weird_series"){
-    checkSize(size, 1);
-    *logL = -1;
-    return weird_series;
-  }
-  if compareStr("double_poisson"){
-    checkSize(size, 2);
-    *logL = -INFINITY;
-    return dbl_poisson;
-  }
-  error("Compiled function not found.");
-}
-
 SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
              SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo);
 
