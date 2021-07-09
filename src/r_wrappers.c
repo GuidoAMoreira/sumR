@@ -20,19 +20,19 @@ SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
 }
 
 SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                              SEXP logL, SEXP n0, SEXP forceAlgo)
+                              SEXP n0, SEXP forceAlgo)
 {
   long double out;
   long n;
+  double lL;
+  lFptr logFunction = precompiled_selector(lF, &lL, REAL(params),
+                                           Rf_xlength(params));
 
-  out = algorithm_selector(precompiled_selector(INTEGER(lF)[0]),
-                           REAL(params), REAL(epsilon)[0],
-                           INTEGER(maxIter)[0], REAL(logL)[0],
+  out = algorithm_selector(logFunction, REAL(params), REAL(epsilon)[0],
+                           INTEGER(maxIter)[0], lL,
                            INTEGER(n0)[0], INTEGER(forceAlgo)[0], &n);
 
   return retFun((double)out, n);
-
-
 }
 
 //////// c-folding wrappers
@@ -60,9 +60,10 @@ SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon,
 {
   long double out;
   long n;
+  double logL;
 
-
-  out = infiniteCFolding_(precompiled_selector(INTEGER(lF)[0]),
+  out = infiniteCFolding_(precompiled_selector(lF, &logL, REAL(params),
+                                               Rf_xlength(params)),
                           REAL(params), REAL(epsilon)[0],
                           INTEGER(maxIter)[0], INTEGER(n0)[0], &n,
                           INTEGER(c)[0], INTEGER(N_start)[0]);
@@ -76,9 +77,11 @@ SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0)
 {
   long double out;
   long n = INTEGER(N)[0];
+  double logL;
 
-  out = sumNTimes_(precompiled_selector(INTEGER(lF)[0]), REAL(params),
-                   n, INTEGER(n0)[0]);
+  out = sumNTimes_(precompiled_selector(lF, &logL, REAL(params),
+                                        Rf_xlength(params)),
+                   REAL(params), n, INTEGER(n0)[0]);
 
   return retFun((double)out, n);
 }

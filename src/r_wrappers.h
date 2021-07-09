@@ -5,6 +5,15 @@
 #include "sumR.h"
 #include "precompiled.h"
 
+double Rf_logspace_add(double, double);
+
+// Quality of life macro
+#define compareStr(s) (!strcmp(CHAR(STRING_PTR(funS)[0]), s))
+#define arraysize(a) sizeof(a) / sizeof(double)
+#define checkSize(s, n) if (s != n) error("Wrong number of parameters.\n")
+
+typedef long double (*lFptr)(long, double*);
+
 // Function evaluation
 static inline double feval(SEXP lF, SEXP rho)
 {return REAL(eval(lF, rho))[0];}
@@ -39,9 +48,9 @@ static inline long double translator(long k, double *Theta)
 
 // Selectors
 
-static inline long double algorithm_selector(
-    long double logF(long k, double *T), double* params, double eps,
-    long mI, double lL, long n0, int selector, long* n)
+static inline long double algorithm_selector(lFptr logF, double *params,
+                                             double eps, long mI, double lL,
+                                             long n0, int selector, long *n)
 {
   if (selector == 2)
     return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n);
@@ -51,39 +60,63 @@ static inline long double algorithm_selector(
     return infiniteSum_(logF, params, eps, mI, lL, n0, n);
 }
 
-typedef long double (*lFptr)(long, double*);
-static inline lFptr precompiled_selector(unsigned int funS){
-  switch (funS){
-  case 1:
+static inline lFptr precompiled_selector(SEXP funS, double *logL,
+                                         double *params, R_xlen_t size){
+
+  if compareStr("negbin_marginal"){
+    checkSize(size, 4);
+    *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
+      log1p(-params[2]);
     return negbin_marginal;
-    break;
-  case 2:
-    return noObs;
-    break;
-  case 3:
-    return COMP;
-    break;
-  case 4:
-    return dR0;
-    break;
-  case 5:
-    return powerLawDiff;
-    break;
-  case 6:
-    return negbin_sentinel;
-    break;
-  case 7:
-    return poisson_sentinel;
-    break;
-  case 8:
-    return weird_series_constL;
-    break;
-  case 9:
-    return weird_series;
-    break;
-  default:
-    error("Compiled function not found.");
   }
+  if compareStr("noObs"){
+    checkSize(size, 1);
+    *logL = log1p(-params[0]);
+    return noObs;
+  }
+  if compareStr("COMP"){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    return COMP;
+  }
+  if compareStr("dR0"){
+    checkSize(size, 4);
+    *logL = log(params[0]) + log1p(-params[3]) +
+      (1 + params[1]) * (log1p(params[1]) - log(params[0] + params[1]));
+    return dR0;
+  }
+  if compareStr("powerLawDiff"){
+    checkSize(size, 3);
+    *logL = log(0.9999);
+    return powerLawDiff;
+  }
+  if compareStr("negbin_sentinel"){
+    checkSize(size, 3);
+    *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
+      log1p(-params[2]);
+    return negbin_sentinel;
+  }
+  if compareStr("poisson_sentinel"){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    return poisson_sentinel;
+  }
+  if compareStr("weird_series_constL"){
+    checkSize(size, 1);
+    *logL = log(params[0]);
+    return weird_series_constL;
+  }
+  if compareStr("weird_series"){
+    checkSize(size, 1);
+    *logL = -1;
+    return weird_series;
+  }
+  if compareStr("double_poisson"){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    return dbl_poisson;
+  }
+  error("Compiled function not found.");
 }
 
 SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
@@ -91,7 +124,7 @@ SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
 
 // Wrapper for C pre-compiled code
 SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                              SEXP logL, SEXP n0, SEXP forceAlgo);
+                              SEXP n0, SEXP forceAlgo);
 
 // Wrappers for the c-folding algorithm
 SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,

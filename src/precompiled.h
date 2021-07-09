@@ -24,6 +24,8 @@ long double weird_series_constL(long k, double *Theta);
 
 long double weird_series(long k, double *Theta);
 
+long double dbl_poisson(long k, double *Theta);
+
 #ifdef __cplusplus
 }
 #endif

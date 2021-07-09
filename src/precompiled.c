@@ -59,4 +59,9 @@ long double weird_series_constL(long k, double *Theta)
 long double weird_series(long k, double *Theta)
 {return (k == 0 ? -INFINITY : lgammal(k + 1) - k * logl(k));}
 
-
+long double dbl_poisson(long k, double *Theta)
+{
+  return k == 0 ? 0.5 * logl(Theta[1]) - Theta[0] * Theta[1]:
+  0.5 * logl(Theta[1]) - (Theta[0] - k) * Theta[1] - k +
+    k * (1 - Theta[1]) * logl(k) - lgammal(k + 1) + Theta[1] * k * logl(Theta[0]);
+}
