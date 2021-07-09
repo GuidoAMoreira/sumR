@@ -113,7 +113,12 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
     if (logFunction == "COMP"){
       stopifnot(length(parameters) == 2)
       logFunction <- COMP
-    }
+    } else
+    if (logFunction == "double_poisson"){
+      stopifnot(length(parameters) == 2)
+      logFunction <- dbl_poisson
+    } else
+      stop("log function not found.")
   }
 
   # Setup
@@ -171,9 +176,8 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
   c <- as.integer(c); N_start <- as.integer(N_start)
 
   if (is.character(logFunction)){
-    selection <- precomp_select(logFunction, parameters)
     out <- .Call("infinite_c_folding_precomp",
-                 selection$selection, parameters, epsilon, maxIter, n0, c,
+                 logFunction, parameters, epsilon, maxIter, n0, c,
                  N_start,
                  PACKAGE = "sumR")
     } else if (is.function(logFunction)) {

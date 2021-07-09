@@ -140,9 +140,8 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
 
   if (is.character(logFunction)){
     if (!is.null(test_logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
-    selection <- precomp_select(logFunction, parameters)
-    out <- .Call("infinite_sum_callPrecomp", selection$selection, parameters,
-                 epsilon, maxIter, selection$lL, n0, forceAlgorithm,
+    out <- .Call("infinite_sum_callPrecomp", logFunction, parameters, epsilon,
+                 maxIter, n0, forceAlgorithm,
                  PACKAGE = "sumR")
   } else if(is.function(logFunction)) {
     if (is.null(logL) && forceAlgorithm != 1)
@@ -152,9 +151,8 @@ infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
     f <- function(k, Theta) logFunction(k, Theta)
 
     out <- .Call("inf_sum",
-                body(f), parameters, epsilon,
-                maxIter, logL,
-                n0, new.env(), forceAlgorithm,
+                body(f), parameters, epsilon, maxIter, logL, n0, new.env(),
+                forceAlgorithm,
                 PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')

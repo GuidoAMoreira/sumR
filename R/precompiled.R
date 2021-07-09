@@ -14,6 +14,12 @@
 #' user when it is known, they must take responsibility for checking and
 #' providing these values.
 #'
+#' Another important thing to note is that the precompiled functions perform all
+#' calculations with twice the numerical precision than R. Therefore, in some
+#' cases, there might be very small differences in the sum when comparing the
+#' results of the function using the precompiled function and the same function
+#' defined at the R level.
+#'
 #' @section Conway-Maxwell-Poisson normalizing constant:
 #' This series is the kernel of the Conway-Maxwell-Poisson distribution, which
 #' generalizes the Poisson and Geometric distributions. Its form is

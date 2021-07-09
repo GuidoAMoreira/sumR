@@ -41,8 +41,7 @@ finiteSum <- function(logFunction, parameters = numeric(), n, n0 = 0){
   n <- as.integer(n); n0 <- as.integer(n0)
 
   if (is.character(logFunction)){
-    selection <- precomp_select(logFunction, parameters)
-    out <- .Call("sum_n_times_precomp", selection$selection, parameters, n, n0,
+    out <- .Call("sum_n_times_precomp", logFunction, parameters, n, n0,
                  PACKAGE = "sumR")
   } else
     out <- list(
