@@ -18,6 +18,12 @@ values of the parameters. The package function does not check for these cases
 and just performs the approximation. If the exact value is desired by the
 user when it is known, they must take responsibility for checking and
 providing these values.
+
+Another important thing to note is that the precompiled functions perform all
+calculations with twice the numerical precision than R. Therefore, in some
+cases, there might be very small differences in the sum when comparing the
+results of the function using the precompiled function and the same function
+defined at the R level.
 }
 \section{Conway-Maxwell-Poisson normalizing constant}{
 
@@ -26,7 +32,9 @@ generalizes the Poisson and Geometric distributions. Its form is
 
 \ifelse{html}{\out{<center> a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup> </center>}}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
 
-\deqn{L = 0, log(L) = -\infty.}
+\deqn{L = 0, log(L) = -\infty,}
+
+for \eqn{\lambda > 0} and \eqn{\nu > 0}.
 
 When \eqn{\nu = 1}, this series reduces to the Poisson distribution kernel
 and the sum (in the log scale) is known to be \eqn{\lambda}. When
