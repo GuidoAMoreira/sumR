@@ -48,7 +48,7 @@
 #'
 #' @section Double Poisson normalizing constant:
 #' This series is the kernel of the double Poisson distribution, which is a
-#' special case of the double exponential family. Its form is
+#' special case of the double exponential family, which extends it. Its form is
 #'
 #' \ifelse{html}{\out{<center> a<sub>n</sub> = φ<sup>0.5</sup> e<sup>-φ µ</sup> (e<sup>-n</sup>n<sup>n</sup> / n!)(eµ / n)<sup>φ n</sup> </center>}}{\deqn{a_n = \sqrt{\phi}e^{-\phi\mu}\left(\frac{e^{-n}n^n}{n!}\right)\left(\frac{e\mu}{n}\right)^{\phi n},}}
 #'
