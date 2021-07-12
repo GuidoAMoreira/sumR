@@ -6,6 +6,14 @@ lFptr precompiled_selector(SEXP funS, double *logL,
 
   if compareStr("negbin_marginal"){
     checkSize(size, 4);
+    if (params[0] <= 0)
+      error("Parameter Mu must be positive.");
+    if (params[1] <= 0)
+      error("Parameter Phi must be positive.");
+    if (params[2] <= 0 || params[2] >= 1)
+      error("Parameter Eta must be in (0,1).");
+    if (params[3] <= 0 || (int)params[3] != params[3])
+      error("Parameter obsX must be an integer.");
     *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
       log1p(-params[2]);
     return negbin_marginal;
