@@ -4,7 +4,7 @@
 #include <Rinternals.h>
 
 #ifndef LOG_2
-#define LOG_2 0.69314718055994530941723212145817656831
+#define LOG_2 0.6931471805599453094172321214581765680748
 #endif
 
 // R internal functions that require definition

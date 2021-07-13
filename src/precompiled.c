@@ -65,3 +65,9 @@ long double dbl_poisson(long k, double *Theta)
   0.5 * logl(Theta[1]) - (Theta[0] - k) * Theta[1] - k +
     k * (1 - Theta[1]) * logl(k) - lgammal(k + 1) + Theta[1] * k * logl(Theta[0]);
 }
+
+long double bessel_I(long k, double *Theta)
+{
+  return (2 * k + Theta[1]) * (logl(Theta[0]) - LOG_2) -
+    lgammal(k + 1) - lgammal(Theta[1] + k + 1);
+}

@@ -72,6 +72,32 @@ and the sum (in the log scale) is known to be 0.
 - parameter vector: \code{c(mu, phi)}
 }
 
+\section{Modified Bessel function of the first kind}{
+
+This is the series form solution for the function. There are more time
+efficient methods for its evaluation however they don't guarantee good
+approximations with large parameters. Its form is
+
+\ifelse{html}{\out{<center> a<sub>n</sub> = (x / 2)<sup>2k+α</sup> / (k!Γ(k + α + 1)) </center>}}{\deqn{a_n = \left(\frac{x}{2}\right)^{2k+\alpha}\frac{1}{k!\Gamma(k+\alpha+1)},}}
+
+\deqn{L = 0, log(L) = -\infty,}
+
+for \eqn{x > 0} and \eqn{\alpha} any real value.
+
+The modified Bessel function of the second kind can be obtained with
+
+\ifelse{html}{\out{<center> K<sub>α</sub>(x) = π / 2 (I<sub>-α</sub>(x) - I<sub>α</sub>(x)) / (sin α π) </center>}}{\deqn{K_\alpha(x) = \frac{\pi}{2}\frac{I_{-\alpha}(x)-I_\alpha(x)}{\sin\quad\alpha\pi},}}
+
+where \eqn{I} represents the modified function of the first kind and \eqn{K}
+of the second kind. It is worth remembering the \code{\link{infiniteSum}}
+function returns the sum in the log scale, which must be adjusted for the
+formula above.
+
+- String to access the precompiled function: \code{"bessel_I"}
+
+- parameter vector: \code{c(x, alpha)}
+}
+
 \seealso{
 \code{\link{infiniteSum}}, \code{\link{finiteSum}} and
 \code{\link{infiniteSum_cFolding}}

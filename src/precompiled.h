@@ -26,6 +26,8 @@ long double weird_series(long k, double *Theta);
 
 long double dbl_poisson(long k, double *Theta);
 
+long double bessel_I(long k, double *Theta);
+
 #ifdef __cplusplus
 }
 #endif

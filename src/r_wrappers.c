@@ -69,6 +69,13 @@ lFptr precompiled_selector(SEXP funS, double *logL,
     *logL = -INFINITY;
     return dbl_poisson;
   }
+  if compareStr("bessel_I"){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    if (params[0] <= 0)
+      error("Parameter x must be positive.");
+    return bessel_I;
+  }
   error("Compiled function not found.");
 }
 
