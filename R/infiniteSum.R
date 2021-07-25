@@ -114,6 +114,7 @@
 infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
                         maxIter = 1e5, logL = NULL, n0 = 0, forceAlgorithm = 0){
 
+  # Make these tests at the C level to make function faster.
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
             is.numeric(parameters),
