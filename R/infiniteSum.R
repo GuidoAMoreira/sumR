@@ -20,7 +20,9 @@
 #' must be smaller than 1, or smaller than 0 in the log scale. See 'details'.
 #' @param epsilon The desired error margin for the approximation. See 'details'.
 #' @param maxIter The maximum number of iterations for the approximation. In
-#' most cases, this number will not be reached unless it is very small.
+#' most cases, this number will not be reached unless it is very small. A value
+#' too high is not recommended as an array of this size is reserved in memory
+#' during the algorithm.
 #' @param n0 The sum will be approximated for the series starting at this value.
 #' @param forceAlgorithm A value to control which summation algorithm to use.
 #' See 'details'.
