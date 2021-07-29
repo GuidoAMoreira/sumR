@@ -8,9 +8,9 @@ maximum}
 infiniteSum(
   logFunction,
   parameters = numeric(),
+  logL = NULL,
   epsilon = 1e-15,
   maxIter = 1e+05,
-  logL = NULL,
   n0 = 0,
   forceAlgorithm = 0
 )
@@ -29,14 +29,14 @@ the second must be a vector of numeric parameters.}
 Vectorized summation over various parameter values sets is not implemented.
 Use \code{\link{apply}} or their variants to achieve this.}
 
+\item{logL}{The log of the limit value of
+\ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
+must be smaller than 1, or smaller than 0 in the log scale. See 'details'.}
+
 \item{epsilon}{The desired error margin for the approximation. See 'details'.}
 
 \item{maxIter}{The maximum number of iterations for the approximation. In
 most cases, this number will not be reached unless it is very small.}
-
-\item{logL}{The log of the limit value of
-\ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
-must be smaller than 1, or smaller than 0 in the log scale. See 'details'.}
 
 \item{n0}{The sum will be approximated for the series starting at this value.}
 
