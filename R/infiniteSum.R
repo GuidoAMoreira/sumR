@@ -15,12 +15,12 @@
 #' @param parameters A numeric vector with parameters used in logFunction.
 #' Vectorized summation over various parameter values sets is not implemented.
 #' Use \code{\link{apply}} or their variants to achieve this.
-#' @param epsilon The desired error margin for the approximation. See 'details'.
-#' @param maxIter The maximum number of iterations for the approximation. In
-#' most cases, this number will not be reached unless it is very small.
 #' @param logL The log of the limit value of
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
 #' must be smaller than 1, or smaller than 0 in the log scale. See 'details'.
+#' @param epsilon The desired error margin for the approximation. See 'details'.
+#' @param maxIter The maximum number of iterations for the approximation. In
+#' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
 #' @param forceAlgorithm A value to control which summation algorithm to use.
 #' See 'details'.
@@ -111,8 +111,9 @@
 #' comp_params = c(lambda = 5, nu = 3)
 #' result <- infiniteSum("COMP", comp_params)
 #' @export
-infiniteSum <- function(logFunction, parameters = numeric(), epsilon = 1e-15,
-                        maxIter = 1e5, logL = NULL, n0 = 0, forceAlgorithm = 0){
+infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
+                        epsilon = 1e-15, maxIter = 1e5, n0 = 0,
+                        forceAlgorithm = 0){
 
   # Make these tests at the C level to make function faster.
   stopifnot(is.function(logFunction) || is.character(logFunction),

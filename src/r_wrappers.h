@@ -47,7 +47,6 @@ static inline long double translator(long k, double *Theta)
 }
 
 // Selectors
-
 static inline long double algorithm_selector(lFptr logF, double *params,
                                              double eps, long mI, double lL,
                                              long n0, int selector, long *n)
