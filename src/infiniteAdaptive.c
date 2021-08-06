@@ -7,7 +7,7 @@ long double infiniteAdaptive_(long double logFun(long k, double *Theta),
 {
   // Declaration
   long nMax;
-  long double maxA, logFunVal[maxIter + 1], lEps = log(eps) + LOG_2, total = 0.,
+  long double maxA, logFunVal[maxIter + 1], lEps = logl(eps) + LOG_2, total = 0.,
     totalBack = 0., log1mL = Rf_logspace_sub(0, logL), c = 0., cb = 0.;
   *n = 0;
 

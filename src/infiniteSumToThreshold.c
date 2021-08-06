@@ -7,7 +7,7 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
 {
   // Declaration
   long nMax;
-  long double maxA, lEps = log(eps), logFunVal[maxIter + 1], total = 0.,
+  long double maxA, lEps = logl(eps), logFunVal[maxIter + 1], total = 0.,
     totalBack = 0., c = 0., cb = 0.;
   *n = 0;
 
