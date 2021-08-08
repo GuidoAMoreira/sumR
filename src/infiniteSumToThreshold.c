@@ -34,10 +34,10 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
   // I know which is the max due to the stop criteria.
   // Assumed local max = global max.
   maxA = logFunVal[*n - 1];
-  nMax = *n;
+  nMax = *n - 1;
   if (*n > 1){
     if (alternating)
-      partial_logSumExp_alternate(logFunVal, *n - 1, maxA, 0,
+      partial_logSumExp_alternate(logFunVal, *n - 2, maxA, 0,
                                   &total, alternating);
     else
       partial_logSumExp(logFunVal, *n - 2, maxA, &c, 0, &total);
@@ -48,7 +48,7 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
     logFunVal[++*n] = logFun(++n0, params);
   while (logFunVal[*n] >= lEps && (*n <= (maxIter - 1)));
   if (alternating)
-    partial_logSumExp_alternate(&logFunVal[nMax], *n - nMax, maxA, 1,
+    partial_logSumExp_alternate(&logFunVal[nMax], *n - nMax - 1, maxA, 1,
                                 &totalBack, alternating);
   else
     partial_logSumExp(&logFunVal[nMax], *n - nMax, maxA, &cb, 1, &totalBack);
