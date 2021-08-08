@@ -4,20 +4,27 @@
 #' For series that pass the ratio test, the approximation is analytically
 #' guaranteed to have an error that is smaller than epsilon. This can
 #' occasionally not happen due to floating point arithmetic.
-#' @param logFunction The function that returns the series value
-#' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
-#' the log scale. Can either be an \code{R} function or a string indicating one
-#' of the precompiled functions. See \code{\link{precompiled}} for a list of
-#' available functions. If defined in \code{R}, the function's definition must
-#' have two arguments. The first argument must be the integer argument
-#' equivalent to \eqn{n} in \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and
-#' the second must be a vector of numeric parameters.
+#' @param logFunction The function that returns the series absolute value
+#' \ifelse{html}{\out{|a<sub>n</sub>|}}{\eqn{|a_n|}} in
+#' the log scale. If it is an alternating series, this is defined in
+#' argument \code{alternate}. Can either be an \code{R} function or a string
+#' indicating one of the precompiled functions. See \code{\link{precompiled}}
+#' for a list of available functions. If defined in \code{R}, the function's
+#' definition must have two arguments. The first argument must be the integer
+#' argument equivalent to \eqn{n} in
+#' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and the second must be a vector
+#' of numeric parameters.
 #' @param parameters A numeric vector with parameters used in logFunction.
 #' Vectorized summation over various parameter values sets is not implemented.
 #' Use \code{\link{apply}} or their variants to achieve this.
 #' @param logL The log of the limit value of
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
-#' must be smaller than 1, or smaller than 0 in the log scale. See 'details'.
+#' must be smaller than 1, or smaller than 0 in the log scale. Ignored if the
+#' series is alternating, defined with argument \code{alternate}. See 'details'.
+#' @param alternate Either -1, 0 or 1. If 0, the series is not alternating.
+#' Otherwise, the series is alternating where the first element's sign is
+#' either 1 or -1, as entered in this parameter. If not 0, arguments \code{logL}
+#' and \code{forceAlgorithm} are ignored.
 #' @param epsilon The desired error margin for the approximation. See 'details'.
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small. A value
@@ -25,6 +32,7 @@
 #' during the algorithm.
 #' @param n0 The sum will be approximated for the series starting at this value.
 #' @param forceAlgorithm A value to control which summation algorithm to use.
+#' Ignored if the series is alternating, defined with argument \code{alternate}.
 #' See 'details'.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
@@ -81,6 +89,10 @@
 #' Adaptive Truncation algorithm can go up to \code{maxIter} + 1 function
 #' evaluations. This is due to its convergence checking dependence on
 #' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}.
+#' 
+#' If the series is alternating, the Sum-To-Threshold convergence condition on
+#' the series absolute value guarantees the result, regardless of the ratio
+#' limit.
 #'
 #' The function to be summed can be an R function or a string naming the
 #' precompiled function in the package. The list of precompiled functions can
@@ -90,7 +102,8 @@
 #'
 #' The advanced user can program their own precompiled functions and use the
 #' package's summation algorithms by linking the appropriate header file. See
-#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
+#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names
+#' to use.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
 #' that can be used for the summation.
 #' @examples
@@ -114,13 +127,15 @@
 #' result <- infiniteSum("COMP", comp_params)
 #' @export
 infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
-                        epsilon = 1e-15, maxIter = 1e5, n0 = 0,
+                        alternate = 0,  epsilon = 1e-15, maxIter = 1e5, n0 = 0,
                         forceAlgorithm = 0){
 
   # Make these tests at the C level to make function faster.
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
             is.numeric(parameters),
+            is.numeric(alternate),
+            alternate %in% -1:1,
             is.numeric(epsilon),
             epsilon > 0,
             length(epsilon) == 1,
@@ -134,33 +149,38 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
             forceAlgorithm %in% 0:2)
 
   test_logL <- logL
-  if (forceAlgorithm == 1){
-    if (!is.null(logL))
+  if (forceAlgorithm == 1 || alternate){
+    if (!is.null(test_logL) && forceAlgorithm == 1)
       warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be ignored.")
     logL <- -1 # Any negative value to pass on to C.
   }
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   forceAlgorithm <- as.integer(forceAlgorithm)
+  alternate <- as.integer(alternate)
 
   if (is.character(logFunction)){
     if (!is.null(test_logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
-    out <- .Call("infinite_sum_callPrecomp", logFunction, parameters, epsilon,
-                 maxIter, n0, forceAlgorithm,
+    out <- .Call("infinite_sum_callPrecomp", logFunction, parameters, alternate,
+                 epsilon, maxIter, n0, forceAlgorithm,
                  PACKAGE = "sumR")
   } else if(is.function(logFunction)) {
-    if (is.null(logL) && forceAlgorithm != 1)
+    if (is.null(test_logL) && forceAlgorithm != 1 && !alternate)
       stop('Parameter logL is NULL. Please provide its value. See help("infiniteSum") for details.')
-    stopifnot(logL < 0)
+    if (!alternate) stopifnot(test_logL < 0)
+    if (!is.null(test_logL) && alternate)
+      warning('Parameter logL is not used in an alternating series. See help("infiniteSum") for details.')
+    if (forceAlgorithm && alternate)
+      warning('Parameter forceAlgorithm is disabled in an alternating series. See help("infiniteSum") for details.')
 
     f <- function(k, Theta) logFunction(k, Theta)
 
     out <- .Call("inf_sum",
-                body(f), parameters, epsilon, maxIter, logL, n0, new.env(),
-                forceAlgorithm,
+                body(f), parameters, alternate, epsilon, maxIter, logL, n0,
+                new.env(), forceAlgorithm,
                 PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')
-    return(list(sum = 0, n = 0))
+    return(list(sum = -Inf, n = 0))
   }
 
   out

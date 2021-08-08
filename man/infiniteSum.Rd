@@ -9,6 +9,7 @@ infiniteSum(
   logFunction,
   parameters = numeric(),
   logL = NULL,
+  alternate = 0,
   epsilon = 1e-15,
   maxIter = 1e+05,
   n0 = 0,
@@ -16,14 +17,16 @@ infiniteSum(
 )
 }
 \arguments{
-\item{logFunction}{The function that returns the series value
-\ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
-the log scale. Can either be an \code{R} function or a string indicating one
-of the precompiled functions. See \code{\link{precompiled}} for a list of
-available functions. If defined in \code{R}, the function's definition must
-have two arguments. The first argument must be the integer argument
-equivalent to \eqn{n} in \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and
-the second must be a vector of numeric parameters.}
+\item{logFunction}{The function that returns the series absolute value
+\ifelse{html}{\out{|a<sub>n</sub>|}}{\eqn{|a_n|}} in
+the log scale. If it is an alternating series, this is defined in
+argument \code{alternate}. Can either be an \code{R} function or a string
+indicating one of the precompiled functions. See \code{\link{precompiled}}
+for a list of available functions. If defined in \code{R}, the function's
+definition must have two arguments. The first argument must be the integer
+argument equivalent to \eqn{n} in
+\ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and the second must be a vector
+of numeric parameters.}
 
 \item{parameters}{A numeric vector with parameters used in logFunction.
 Vectorized summation over various parameter values sets is not implemented.
@@ -31,7 +34,13 @@ Use \code{\link{apply}} or their variants to achieve this.}
 
 \item{logL}{The log of the limit value of
 \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
-must be smaller than 1, or smaller than 0 in the log scale. See 'details'.}
+must be smaller than 1, or smaller than 0 in the log scale. Ignored if the
+series is alternating, defined with argument \code{alternate}. See 'details'.}
+
+\item{alternate}{Either -1, 0 or 1. If 0, the series is not alternating.
+Otherwise, the series is alternating where the first element's sign is
+either 1 or -1, as entered in this parameter. If not 0, arguments \code{logL}
+and \code{forceAlgorithm} are ignored.}
 
 \item{epsilon}{The desired error margin for the approximation. See 'details'.}
 
@@ -43,6 +52,7 @@ during the algorithm.}
 \item{n0}{The sum will be approximated for the series starting at this value.}
 
 \item{forceAlgorithm}{A value to control which summation algorithm to use.
+Ignored if the series is alternating, defined with argument \code{alternate}.
 See 'details'.}
 }
 \value{
@@ -109,6 +119,10 @@ Adaptive Truncation algorithm can go up to \code{maxIter} + 1 function
 evaluations. This is due to its convergence checking dependence on
 \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}.
 
+If the series is alternating, the Sum-To-Threshold convergence condition on
+the series absolute value guarantees the result, regardless of the ratio
+limit.
+
 The function to be summed can be an R function or a string naming the
 precompiled function in the package. The list of precompiled functions can
 be found in \code{\link{precompiled}}, and more functions will be added in
@@ -117,7 +131,8 @@ an \code{R} function. In fact, it has been observed to be dozens time faster.
 
 The advanced user can program their own precompiled functions and use the
 package's summation algorithms by linking the appropriate header file. See
-the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names to use.
+the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names
+to use.
 }
 \examples{
 ## Define some function that is known to pass the ratio test.

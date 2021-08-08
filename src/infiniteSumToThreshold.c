@@ -2,7 +2,7 @@
 #include "math.h"
 
 long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
-                              double *params, double eps,
+                              double *params, int alternating, double eps,
                               long maxIter, long n0, long* n)
 {
   // Declaration
@@ -23,7 +23,11 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
   // If too many iterations. Last iter is max.
   if (*n == maxIter)
   {
-    partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
+    if (alternating)
+      partial_logSumExp_alternate(logFunVal, maxIter - 1, logFunVal[*n], 0,
+                                  &total, alternating);
+    else
+      partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
     return logFunVal[*n] + log1pl(total);
   }
 
@@ -31,14 +35,26 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
   // Assumed local max = global max.
   maxA = logFunVal[*n - 1];
   nMax = *n;
-  if (*n > 1)
-    partial_logSumExp(logFunVal, *n - 2, maxA, &c, 0, &total);
+  if (*n > 1){
+    if (alternating)
+      partial_logSumExp_alternate(logFunVal, *n - 1, maxA, 0,
+                                  &total, alternating);
+    else
+      partial_logSumExp(logFunVal, *n - 2, maxA, &c, 0, &total);
+  }
 
   // Calculate the tail. Only loop once.
   do
     logFunVal[++*n] = logFun(++n0, params);
   while (logFunVal[*n] >= lEps && (*n <= (maxIter - 1)));
-  partial_logSumExp(&logFunVal[nMax], *n - nMax, maxA, &cb, 1, &totalBack);
+  if (alternating)
+    partial_logSumExp_alternate(&logFunVal[nMax], *n - nMax, maxA, 1,
+                                &totalBack, alternating);
+  else
+    partial_logSumExp(&logFunVal[nMax], *n - nMax, maxA, &cb, 1, &totalBack);
 
-  return maxA + log1pl(total + totalBack);
+  if (alternating)
+    return maxA + logl(total + totalBack);
+  else
+    return maxA + log1pl(total + totalBack);
 }

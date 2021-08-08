@@ -1,11 +1,12 @@
-# sumR <img src='man/figures/logo.jpeg' align="right" height="139" />
+# sumR <img src="man/figures/logo.jpeg" align="right" height="139"/>
 
 Approximate infinite series with a guaranteed error margin!
 
 # Installation
+
 Installing this package in R from this GitHub page is straightforward. Make sure you have the package `devtool` installed and that your Operating System has a C compiler that R can access. This is automatically true in a standard installation in Linux, requires Xcode or gcc (depends on MacOS version) in Mac, and Rtools in Windows. Then, just run:
 
-```R
+``` r
 devtools::install_github("GuidoAMoreira/sumR")
 ```
 
@@ -13,7 +14,7 @@ devtools::install_github("GuidoAMoreira/sumR")
 
 It is possible to define a series at the C level and use a `Rcpp` wrapper function. For this to be possible, all that is needed is the use of the *depends* Rcpp attribute and including the adequate header. The following code at the R level exports a function that sums a series.
 
-```R
+``` r
 library(Rcpp)
 
 sourceCpp(code='
@@ -55,14 +56,14 @@ The available functions and their arguments are listed below.
 
 Package `sumR` facilitates using its low-level C or C++ function in other packages. In order to use it, these steps are necessary:
 
-1. Make sure that the DESCRIPTION file in your package includes `sumR` in its **LinkingTo** and **Imports** fields.
-2. Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as mypackage-package.R, before running `roxygen2::roxygenize()`.
-3. Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
-4. Use sumR's functions in your code.
+1.  Make sure that the DESCRIPTION file in your package includes `sumR` in its **LinkingTo** and **Imports** fields.
+2.  Make sure that the NAMESPACE file in your packages includes a line with `import(sumR)`. If you are using the roxygen2 documentation package, this can be achieved by adding `#' @import sumR` in one of your R files, such as mypackage-package.R, before running `roxygen2::roxygenize()`.
+3.  Include sumR's API header file, sumRAPI.h, in your C or C++ file that will use the desired sumR low-level function.
+4.  Use sumR's functions in your code.
 
 The following code exemplifies a C file in a package after steps 1. and 2. above were taken. See [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) to learn about the `SEXP` type and related macros and functions.
 
-```C
+``` c
 #include <Rinternals.h>
 #include <Rmath.h> // Required for the log1p and log1pl functions
 #include <sumRAPI.h>
@@ -87,12 +88,11 @@ SEXP sum_series(SEXP param)
   
   return Rf_ScalarReal((double)r);
 }
-
 ```
 
 Then your package can have an R wrapper function such as:
 
-```R
+``` r
 #' Wrapper function that sums a series for a given parameter
 #' @export
 sumSeries <- function(p) .Call("sum_series", param = p, PACKAGE = "mypackage")
@@ -100,7 +100,7 @@ sumSeries <- function(p) .Call("sum_series", param = p, PACKAGE = "mypackage")
 
 The this function can be tested after the package has been installed with:
 
-```R
+``` r
 sumSeries(0.08)
 ```
 
@@ -108,9 +108,9 @@ sumSeries(0.08)
 
 The interfaced functions from sumR are:
 
-```C
-long double infiniteSum(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
-long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n);
+``` c
+long double infiniteSum(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, double logL, long n0, long* n);
+long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, long n0, long* n);
 long double infiniteAdaptive(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
 long double infiniteCFolding(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long c, long N_start);
 long double sumNTimes(long double logFun(long k, double *Theta), double *params, long n, long n0);
@@ -125,3 +125,5 @@ See the help documentation in the sumR package for information about the interfa
 When making a wrapper function, we have found that manually typecasting the result of the low-level C function to double before passing it to R is more stable in some systems than straight up using Rf_ScalarReal on the long double result.
 
 Since all `sumR` code is in C, a C++ functor cannot be passed as the logFun argument, not even in a templated wrapper.
+
+None of the functions do error checking. It is the user's responsibility to pass adequate arguments.

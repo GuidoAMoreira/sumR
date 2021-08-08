@@ -13,31 +13,31 @@ extern "C" {
 // infiniteSum auto select
 long double infiniteSum(
     long double logFun(long k, double *Theta),
-    double *params, double eps,
+    double *params, int alternating, double eps,
     long maxIter, double logL, long n0, long* n) {
   static long double (*fun)(long double (long k, double *Theta),
-                      double*, double, long, double, long,
+                      double*, int, double, long, double, long,
                       long*) = NULL;
   fun = (long double(*)(long double (long k, double *Theta),
-                     double*, double, long, double, long,
+                     double*, int, double, long, double, long,
                      long*))
     R_GetCCallable("sumR", "infiniteSum_");
-  return fun(logFun, params, eps, maxIter, logL, n0, n);
+  return fun(logFun, params, alternating, eps, maxIter, logL, n0, n);
 }
 
 // Sum-To-Threshold algorithm
 long double infiniteSumToThreshold(
     long double logFun(long k, double *Theta),
-    double *params, double eps,
+    double *params, int alternating, double eps,
     long maxIter, long n0, long* n) {
   static long double (*fun)(long double (long k, double *Theta),
-                      double*, double, long, long,
+                      double*, int, double, long, long,
                       long*) = NULL;
   fun = (long double(*)(long double (long k, double *Theta),
-                     double*, double, long, long,
+                     double*, int, double, long, long,
                      long*))
     R_GetCCallable("sumR", "infiniteSumToThreshold_");
-  return fun(logFun, params, eps, maxIter, n0, n);
+  return fun(logFun, params, alternating, eps, maxIter, n0, n);
 }
 
 // Adaptive Truncation algorithm

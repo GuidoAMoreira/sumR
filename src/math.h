@@ -15,6 +15,10 @@ double Rf_log1pexp(double);
 void partial_logSumExp(long double*, long, long double,
                        long double*, int, long double*);
 
+// Auxiliary function. NOT A FULL logSumExp IMPLEMENTATION
+void partial_logSumExp_alternate(long double*, long, long double,
+                       int, long double*, int);
+
 // This function helps reduce the floating point rounding error.
 static inline void KahanSum(long double* tot, long double x, long double* c)
 {

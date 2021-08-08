@@ -79,7 +79,7 @@ lFptr precompiled_selector(SEXP funS, double *logL,
   error("Compiled function not found.");
 }
 
-SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
+SEXP inf_sum(SEXP logFun, SEXP params, SEXP alternating, SEXP eps, SEXP maxIter,
              SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo)
 {
   defineVar(install("Theta"), params, rho);
@@ -90,15 +90,16 @@ SEXP inf_sum(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
   envir = rho;
   lF = logFun;
 
-  out = algorithm_selector(translator, REAL(params), REAL(eps)[0],
-                           INTEGER(maxIter)[0], REAL(logL)[0], INTEGER(n0)[0],
+  out = algorithm_selector(translator, REAL(params), INTEGER(alternating)[0],
+                           REAL(eps)[0], INTEGER(maxIter)[0],
+                           REAL(logL)[0], INTEGER(n0)[0],
                            INTEGER(forceAlgo)[0], &n);
 
   return retFun((double)out, n);
 }
 
-SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                              SEXP n0, SEXP forceAlgo)
+SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating, SEXP eps,
+                              SEXP maxIter, SEXP n0, SEXP forceAlgo)
 {
   long double out;
   long n;
@@ -106,8 +107,8 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
   lFptr logFunction = precompiled_selector(lF, &lL, REAL(params),
                                            Rf_xlength(params));
 
-  out = algorithm_selector(logFunction, REAL(params), REAL(epsilon)[0],
-                           INTEGER(maxIter)[0], lL,
+  out = algorithm_selector(logFunction, REAL(params), INTEGER(alternating)[0],
+                           REAL(eps)[0],INTEGER(maxIter)[0], lL,
                            INTEGER(n0)[0], INTEGER(forceAlgo)[0], &n);
 
   return retFun((double)out, n);
