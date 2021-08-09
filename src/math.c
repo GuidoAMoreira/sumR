@@ -43,21 +43,19 @@ void partial_logSumExp(long double* fun, long evals, long double maxA,
 }
 
 void partial_logSumExp_alternate(long double* fun, long evals, long double maxA,
-                       int backwards, long double* res, int alt)
+                       int backwards, long double* res, int* alt)
 {
-  int tempAlt = alt;
   // Go backwards if the series is decreasing and forward otherwise.
   if (backwards){
-    tempAlt *= (evals % 2 ? -1 : 1);
+    *alt *= (evals % 2 ? -1 : 1);
     for (R_xlen_t i = evals; i >= 0; i--){
-      *res += tempAlt * expl(fun[i] - maxA);
-      tempAlt *= -1;
+      *res += *alt * expl(fun[i] - maxA);
+      *alt *= -1;
       }
     }
   else
     for (R_xlen_t i = 0; i <= evals; i++){
-      *res += tempAlt * expl(fun[i] - maxA);
-      tempAlt *= -1;
+      *res += *alt * expl(fun[i] - maxA);
+      *alt *= -1;
       }
-      
 }
