@@ -33,7 +33,8 @@ finiteSum <- function(logFunction, parameters = numeric(), n, n0 = 0){
             is.numeric(parameters),
             is.numeric(n),
             length(n) == 1,
-            n >= 0,
+            n > 0,
+            n <= 5e5,
             is.numeric(n0),
             n0 >= 0,
             length(n0) == 1)
