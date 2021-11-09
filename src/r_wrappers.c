@@ -76,6 +76,15 @@ lFptr precompiled_selector(SEXP funS, double *logL,
       error("Parameter x must be positive.");
     return bessel_I;
   }
+  if (compareStr("poisson_fact_moment")){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    if (params[0] <= 0)
+      error("Parameter lambda must be positive.");
+    if (params[1] <= 1)
+      error("Parameter order must be larger than 1.");
+    return poisson_fact_moment;
+  }
   error("Compiled function not found.");
 }
 
