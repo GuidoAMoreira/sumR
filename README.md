@@ -126,6 +126,6 @@ When making a wrapper function, we have found that manually typecasting the resu
 
 Since all `sumR` code is in C, a C++ functor cannot be passed as the logFun argument, not even in a templated wrapper.
 
-None of the C functions do error checking. It is the user's responsibility to pass adequate arguments.
+None of the C functions do error checking. It is the user's responsibility to pass adequate arguments. Pay particular mind to the C stack limit (the functions create an array of `maxIter` size).
 
-If defining an R function with `cppFunction`, make sure it can accept multiple values for argument k.
+If defining an R function with `cppFunction`, be mindful that argument `k` of `logFun` is a single `long`. If multiple values are expected, they should be dealt with in the wrapper.
