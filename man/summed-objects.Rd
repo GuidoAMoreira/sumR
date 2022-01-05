@@ -3,7 +3,7 @@
 \name{summed-objects}
 \alias{summed-objects}
 \alias{print.summed}
-\title{Class for objects containing iterated summations}
+\title{S3 Class for objects containing iterated summations}
 \usage{
 \method{print}{summed}(x, ...)
 }

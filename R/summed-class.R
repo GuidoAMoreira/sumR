@@ -1,4 +1,4 @@
-#' Class for objects containing iterated summations
+#' S3 Class for objects containing iterated summations
 #' 
 #' Contains the summations in the log scale. The value can either be an
 #' approximation to an infinite series or a finite sum.
