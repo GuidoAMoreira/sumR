@@ -23,7 +23,7 @@
 #' @param c The fold by which \code{N_start} is multiplied to calculate the
 #' checkpoints. See 'details'.
 #' @param N_start The size of the first batch. It is multiplied by \code{c} to
-#' find the checkpoints. See 'details'.
+#' find the next batch end points. See 'details'.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
 #' iterations, that is, the number of times the function was evaluated.
@@ -33,12 +33,7 @@
 #' @details The series \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} must pass
 #' the ratio convergence test, meaning that the ratio
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} must
-#' converge to a number \eqn{L < 1} when \eqn{n} goes to infinity. The
-#' approximation can be proven to overshoot the necessary number of function
-#' evaluations when \eqn{L < 0.5}, in the sense that its result would be within
-#' \code{epsilon} distance of the true value with much fewer evalutaions. If
-#' \eqn{0.5 \le L < 1}, then there is no theoretical proof of overshooting, but
-#' practical experimentation has shown that this is the case in many examples.
+#' converge to a number \eqn{L < 1} when \eqn{n} goes to infinity.
 #'
 #' The c-folding algorithm consists of evaluating the function a fixed number of
 #' times for two checkpoints. If the difference between the sum at these
@@ -61,7 +56,13 @@
 #' level, while \code{infiniteSum_cFolding_C} interfaces the low level \code{C}
 #' code. However, the \code{C} code does not use vectorization to reduce
 #' dependency on third party libraries, and therefore the \code{R} level
-#' function should be faster.
+#' function should be faster in most cases.
+#' 
+#' Another difference is that the low level code uses double precision for the
+#' calculations. This means that it is less prone to rounding errors. But this
+#' also means that the two functions can sometimes require a different number
+#' of iterations and function evaluations to reach the stop criteria. This
+#' is shown in the examples.
 #'
 #' Another requirement in the current installment of this function is that the
 #' series must have only a single maximum. This is the case for most discrete
@@ -78,12 +79,23 @@
 #' TrueSum - result$sum
 #' # Notice that it required 400 function evaluations for the approximation.
 #' result$n
+#' 
+#' # If we use the C function, it reaches a lower error, but requires more
+#' # iterations
+#' result_C <- infiniteSum_cFolding_C(funfun, parameters = param)
+#' TrueSum - result_C$sum
+#' result_C$n
 #'
 #' ## A common problem is finding the normalizing constant for the
 #' ## Conway-Maxwell-Poisson distribution. It has already been included
 #' ## in the precompiled list of functions.
 #' comp_params = c(lambda = 5, nu = 3)
 #' result <- infiniteSum_cFolding("COMP", comp_params)
+#' # With a specifically chosen argument value, the summation can be done with
+#' # fewer iterations. But it is usually hard to know the ideal choice for
+#' # applications beforehand
+#' result$n
+#' infiniteSum_cFolding("COMP", comp_params, c = 2, N_start = 11)$n
 #' @importFrom matrixStats logSumExp
 #' @export
 infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
@@ -130,22 +142,30 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
   lastCheckPoint <- nextCheckPoint + 1
   nextCheckPoint <- n0 + N_inc - 1
   increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
+  summedIncrement <- matrixStats::logSumExp(increment)
   n <- n0 + N_inc
 
   # Convergence checking
-  while (n < maxIter && (matrixStats::logSumExp(increment) > lEps ||
+  while (n < maxIter && (summedIncrement > lEps ||
+                         increment[length(increment)] -
+                         increment[length(increment) - 1] >
+                         -log1p(exp(increment[length(increment)] -
+                                    summedIncrement)) ||
          funValues[length(funValues)] > funValues[length(funValues) - 1] ||
          is.infinite(funValues[length(funValues)]))){
     funValues <- c(funValues, increment)
     lastCheckPoint <- nextCheckPoint + 1
     nextCheckPoint <- nextCheckPoint + N_inc - 1
     increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
+    summedIncrement <- matrixStats::logSumExp(increment)
     n <- n + N_inc
   }
   funValues <- c(funValues, increment)
 
-  list(sum = matrixStats::logSumExp(sort(funValues)),
-       n = n)
+  out <- list(sum = matrixStats::logSumExp(sort(funValues)),
+              n = n, method = "c-folding in R")
+  class(out) <- "summed"
+  out
 }
 
 #' @name infiniteSum_cFolding
@@ -192,8 +212,12 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
     warning('Argument lFun must either be the name of a precompiled function
             or a function. See help("precompiled") to see which functions are
             available.')
-    return(list(sum = 0, n = 0))
+    out <- list(sum = -Inf, n = 0, method = "canceled")
+    class(out) <- "summed"
+    out
   }
 
+  out$method = "c-folding in C"
+  class(out) <- "summed"
   out
 }

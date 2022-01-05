@@ -101,7 +101,7 @@ SEXP inf_sum(SEXP logFun, SEXP params, SEXP alternating, SEXP eps, SEXP maxIter,
 
   out = algorithm_selector(translator, REAL(params), INTEGER(alternating)[0],
                            REAL(eps)[0], INTEGER(maxIter)[0],
-                           REAL(logL)[0], INTEGER(n0)[0],
+                           Rf_isNull(logL) ? 1. : REAL(logL)[0], INTEGER(n0)[0],
                            INTEGER(forceAlgo)[0], &n);
 
   return retFun((double)out, n);

@@ -7,10 +7,10 @@
 
 double Rf_logspace_add(double, double);
 
-// Quality of life macro
+// Quality of life macros
 #define compareStr(s) (!strcmp(CHAR(STRING_PTR(funS)[0]), s))
 #define arraysize(a) sizeof(a) / sizeof(double)
-#define checkSize(s, n) if (s != n) error("Wrong number of parameters.\n")
+#define checkSize(s, n) if (s != n) error("Wrong number of parameters. Expected %d, found %d.\n", n, s)
 
 typedef long double (*lFptr)(long, double*);
 
@@ -56,8 +56,12 @@ static inline long double algorithm_selector(lFptr logF, double *params,
     return infiniteSum_(logF, params, alternating, eps, mI, lL, n0, n);
   else if (selector == 1)
     return infiniteSumToThreshold_(logF, params, alternating, eps, mI, n0, n);
-  else
+  else if (selector == 2)
     return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n);
+  else if (selector == 3)
+    return infiniteCFolding_(logF, params, eps, mI, n0, n, 2, 20);
+  else
+    error("Invalid forceAlgorithm argument.\n");
 }
 
 // Wrapper for R defined function

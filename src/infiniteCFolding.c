@@ -9,7 +9,8 @@ long double infiniteCFolding_(long double logFun(long k, double *Theta),
   // Declaration
   long N, N_inc = N_start * c;
   long double maxA, lEps = logl(eps), logFunVal[maxIter + 1],
-          partial = 0., *checkStart = logFunVal, S = 0., cc = 0., total = 0;
+          partial = 0., *checkStart = logFunVal,
+          S = 0., lS, cc = 0., total = 0, test1, test2 = 0.;
   *n = 0;
 
   logFunVal[*n] = logFun(n0, params);
@@ -40,14 +41,23 @@ long double infiniteCFolding_(long double logFun(long k, double *Theta),
   N = *n == N_inc ? N_inc - N_start - 1 : N_inc - 1; // How many iterations to the last checkpoints.
   cc = 0.;
   partial_logSumExp(checkStart, N, maxA, &cc, 0, &S);
+  test1 = logFunVal[*n] - logFunVal[*n - 1];
+  lS = logl(S);
 
   // Calculate the tail. Only loop once.
-  while (logl(S) >= lEps && *n < maxIter)
+  // test1 and test2 are required for correct convergence condition
+  while ((lS > lEps || test2 - test1 > -log1pl(expl(logFunVal[*n] - lS))) &&
+         *n < maxIter)
   {
     partial += S;
-    for (N = 0, S = 0.; N < N_inc; N++)
+    for (N = 0, S = 0.; N < (N_inc - 2); N++)
       KahanSum(&S, exp(logFun(++n0, params) - maxA), &cc);
+    test1 = logFun(++n0, params);
+    KahanSum(&S, exp(test1 - maxA), &cc);
+    test2 = logFun(++n0, params);
+    KahanSum(&S, exp(test2 - maxA), &cc);
     *n += N_inc;
+    lS = logl(S);
   }
 
   return maxA + logl(partial + S);

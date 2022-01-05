@@ -20,7 +20,9 @@
 #' @param logL The log of the limit value of
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
 #' must be smaller than 1, or smaller than 0 in the log scale. Ignored if the
-#' series is alternating, defined with argument \code{alternate}. See 'details'.
+#' series is alternating, defined with argument \code{alternate}. If left as
+#' \code{NULL} and \code{logFunction} is defined in \code{R}, the
+#' \code{c-folding} algorithm with default settings is used. See 'details'.
 #' @param alternate Either -1, 0 or 1. If 0, the series is not alternating.
 #' Otherwise, the series is alternating where the first element's sign is
 #' either 1 or -1, as entered in this parameter. If not 0, arguments \code{logL}
@@ -65,7 +67,7 @@
 #' it is only guaranteed to provide an approximation within the desired error
 #' margin when \eqn{L < 0.5}.
 #'
-#' The second algorithm, called Adaptive Truncation is based on a more general
+#' The second algorithm, called Error bounding pairs is based on a more general
 #' result which works for any \eqn{0 \le L < 1}. This algorithm sums the series
 #' until
 #'
@@ -75,20 +77,28 @@
 #'
 #' \ifelse{html}{\out{<center> 0.5 (a<sub>n+1</sub>/(1-L) + a<sub>n+1</sub> a<sub>n</sub>/(a<sub>n</sub> - a<sub>n+1</sub>))</center>}}{\deqn{0.5 (\frac{a_{n+1}}{1-L} + \frac{a_{n+1}a_n}{a_n-a_{n+1}}).}}
 #'
-#' The Adaptive Truncation method usually requires less function evaluations
+#' The Error bounding pairs method usually requires less function evaluations
 #' than the Sum-To-Threshold one, however the convergence checking is more
 #' demanding, which means that it is typically slower, albeit slightly. If
-#' \eqn{L = 0}, the convergence checking can be reduced and the Adaptive
-#' Truncation becomes almost as fast as the Sum-To-Threshold method.
+#' \eqn{L = 0}, the convergence checking can be reduced and the Error bounding
+#' pairs becomes almost as fast as the Sum-To-Threshold method.
+#' 
+#' The third algorithm is called c-folding method and is used when \eqn{L} is
+#' unknown. Its use requires some fine tuning, so there is a standalone function
+#' for it called \code{\link{infiniteSum_cFolding}}. Its use and functionality
+#' can be seen in its own documentation. When used as a result of this function,
+#' default settings are used.
 #'
 #' The \code{forceAlgorithm} parameter can be used to
 #' control which algorithm to use. When it is 0, the program automatically
-#' selects the Sum-To-Threshold when \eqn{L < 0.5} and the Adaptive Truncation
-#' otherwise. If it is set to 1, then the Sum-To-Threshold algorithm is forced.
-#' If it is 2, then the Adaptive Truncation is forced. A small note, the
-#' Adaptive Truncation algorithm can go up to \code{maxIter} + 1 function
+#' selects the Sum-to-threshold when \eqn{L < 0.5} and the Error bounding pairs
+#' when \eqn{L < 1} and c-folding when \eqn{L} is left \code{NULL}. If it is
+#' set to 1, then the Sum-To-Threshold algorithm is forced.
+#' If it is 2, then the Error bounding pairs is forced. A small note, the
+#' Error bounding pairs algorithm can go up to \code{maxIter} + 1 function
 #' evaluations. This is due to its convergence checking dependence on
-#' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}.
+#' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}. Finally, if the
+#' parameter is set as 3, the c-folding algorithm is used with default settings.
 #' 
 #' If the series is alternating, the Sum-To-Threshold convergence condition on
 #' the series absolute value guarantees the result, regardless of the ratio
@@ -105,7 +115,9 @@
 #' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names
 #' to use.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
-#' that can be used for the summation.
+#' that can be used for the summation. \code{\link{infiniteSum_cFolding}} is
+#' an alternate method which does not require knowledge of the \code{logL}
+#' argument.
 #' @examples
 #' ## Define some function that is known to pass the ratio test.
 #' param = 0.1
@@ -115,7 +127,7 @@
 #' ## This series is easy to verify analytically
 #' TrueSum = -log(param)
 #' TrueSum - result$sum
-#' # Since exp(logL) = 0.9, the Adaptive Truncation
+#' # Since exp(logL) = 0.9, the Error bounding pairs
 #' # algorithm is used. Notice that it only required
 #' # 2 function evaluations for the approximation, that is
 #' result$n
@@ -149,26 +161,22 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
             length(n0) == 1,
             forceAlgorithm %in% 0:2)
 
-  test_logL <- logL
   if (forceAlgorithm == 1 || alternate){
-    if (!is.null(test_logL) && forceAlgorithm == 1)
+    if (!is.null(logL) && forceAlgorithm == 1)
       warning("Sum-To-Threshold algorithm doesn't use parameter logL. It will be ignored.")
-    logL <- -1 # Any negative value to pass on to C.
   }
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   forceAlgorithm <- as.integer(forceAlgorithm)
   alternate <- as.integer(alternate)
 
   if (is.character(logFunction)){
-    if (!is.null(test_logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
+    if (!is.null(logL)) warning("Summation over precompiled functions uses pre-determined logL. Inputted value ignored.")
     out <- .Call("infinite_sum_callPrecomp", logFunction, parameters, alternate,
                  epsilon, maxIter, n0, forceAlgorithm,
                  PACKAGE = "sumR")
   } else if(is.function(logFunction)) {
-    if (is.null(test_logL) && forceAlgorithm != 1 && !alternate)
-      stop('Parameter logL is NULL. Please provide its value. See help("infiniteSum") for details.')
-    if (!alternate) stopifnot(test_logL < 0)
-    if (!is.null(test_logL) && alternate)
+    if (!alternate) stopifnot(logL < 0)
+    if (!is.null(logL) && alternate)
       warning('Parameter logL is not used in an alternating series. See help("infiniteSum") for details.')
     if (forceAlgorithm && alternate)
       warning('Parameter forceAlgorithm is disabled in an alternating series. See help("infiniteSum") for details.')
@@ -181,8 +189,15 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
                 PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function or a function. See help("precompiled") to see which functions are available.')
-    return(list(sum = -Inf, n = 0))
+    return(list(sum = -Inf, n = 0, method = "canceled"))
   }
 
+  if (logL < -log(2))
+    m <- "Sum-to-threshold"
+  else if (logL < 0)
+    m <- "Error bounding pairs"
+  else m <- "c-folding"
+  out$method = m
+  class(out) <- "summed"
   out
 }

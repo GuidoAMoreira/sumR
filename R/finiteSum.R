@@ -49,5 +49,7 @@ finiteSum <- function(logFunction, parameters = numeric(), n, n0 = 0){
       sum = matrixStats::logSumExp(sort(logFunction(n0:(n0 + n), parameters))),
       n = n)
 
-  out$sum
+  out$method <- "finite sum"
+  class(out) <- "summed"
+  out
 }
