@@ -143,7 +143,7 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
   nextCheckPoint <- n0 + N_inc - 1
   increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
   summedIncrement <- matrixStats::logSumExp(increment)
-  n <- n0 + N_inc
+  n <- N_inc
 
   # Convergence checking
   while (n < maxIter && (summedIncrement > lEps ||
