@@ -89,5 +89,5 @@
 #'
 #' @name precompiled
 #' @seealso \code{\link{infiniteSum}}, \code{\link{finiteSum}} and
-#' \code{\link{infiniteSum_cFolding}}
+#' \code{\link{infiniteSum_batches}}
 NULL
