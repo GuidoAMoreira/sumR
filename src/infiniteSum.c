@@ -8,7 +8,7 @@ long double infiniteSum_(
   if (logL < - LOG_2 || alternating)
     return infiniteSumToThreshold_(logFun, params, alternating, eps, maxIter, n0, n);
   else if (logL < 0)
-    return infiniteAdaptive_(logFun, params, eps, maxIter, logL, n0, n);
+    return infiniteErrorBoundingPairs_(logFun, params, eps, maxIter, logL, n0, n);
   else
-    return infiniteCFolding_(logFun, params, eps, maxIter, n0, n, 2, 20);
+    return infiniteBatches_(logFun, params, eps, maxIter, n0, n, 40);
 }

@@ -41,7 +41,7 @@ long double infiniteSumToThreshold(
 }
 
 // Adaptive Truncation algorithm
-long double infiniteAdaptive(
+long double infiniteErrorBoundingPairs(
     long double logFun(long k, double *Theta),
     double *params, double eps,
     long maxIter, double logL, long n0, long* n) {
@@ -51,23 +51,23 @@ long double infiniteAdaptive(
   fun = (long double(*)(long double (long k, double *Theta),
                      double*, double, long, double, long,
                      long*))
-    R_GetCCallable("sumR", "infiniteAdaptive_");
+    R_GetCCallable("sumR", "infiniteErrorBoundingPairs_");
   return fun(logFun, params, eps, maxIter, logL, n0, n);
 }
 
 // c-folding algorithm
-long double infiniteCFolding(
+long double infiniteBatches(
     long double logFun(long k, double *Theta),
     double *params, double eps,
-    long maxIter, long n0, long* n, long c, long N_start) {
+    long maxIter, long n0, long* n, long batch_size) {
   static long double (*fun)(long double (long k, double *Theta),
                       double*, double, long, long,
-                      long*, long, long) = NULL;
+                      long*, long) = NULL;
   fun = (long double(*)(long double (long k, double *Theta),
                      double*, double, long, long,
-                     long*, long, long))
-    R_GetCCallable("sumR", "infiniteCFolding_");
-  return fun(logFun, params, eps, maxIter, n0, n, c, N_start);
+                     long*, long))
+    R_GetCCallable("sumR", "infiniteBatches_");
+  return fun(logFun, params, eps, maxIter, n0, n, batch_size);
 }
 
 // sum N times

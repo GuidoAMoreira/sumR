@@ -125,8 +125,8 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating, SEXP eps,
 
 //////// c-folding wrappers
 
-SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-                   SEXP n0, SEXP rho, SEXP c, SEXP N_start)
+SEXP inf_batches(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
+                   SEXP n0, SEXP rho, SEXP batch_size)
 {
   defineVar(install("Theta"), params, rho);
   long double out;
@@ -136,25 +136,25 @@ SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
   envir = rho;
   lF = logFun;
 
-  out = infiniteCFolding_(translator, REAL(params), REAL(eps)[0],
+  out = infiniteBatches_(translator, REAL(params), REAL(eps)[0],
                           INTEGER(maxIter)[0], INTEGER(n0)[0], &n,
-                          INTEGER(c)[0], INTEGER(N_start)[0]);
+                          INTEGER(batch_size)[0]);
 
   return retFun((double)out, n);
 }
 
-SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon,
-                                SEXP maxIter, SEXP n0, SEXP c, SEXP N_start)
+SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP epsilon,
+                                SEXP maxIter, SEXP n0, SEXP batch_size)
 {
   long double out;
   long n;
   double logL;
 
-  out = infiniteCFolding_(precompiled_selector(lF, &logL, REAL(params),
+  out = infiniteBatches_(precompiled_selector(lF, &logL, REAL(params),
                                                Rf_xlength(params)),
                           REAL(params), REAL(epsilon)[0],
                           INTEGER(maxIter)[0], INTEGER(n0)[0], &n,
-                          INTEGER(c)[0], INTEGER(N_start)[0]);
+                          INTEGER(batch_size)[0]);
 
   return retFun((double)out, n);
 }

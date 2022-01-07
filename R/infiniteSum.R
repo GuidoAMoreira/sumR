@@ -22,7 +22,7 @@
 #' must be smaller than 1, or smaller than 0 in the log scale. Ignored if the
 #' series is alternating, defined with argument \code{alternate}. If left as
 #' \code{NULL} and \code{logFunction} is defined in \code{R}, the
-#' \code{c-folding} algorithm with default settings is used. See 'details'.
+#' \code{batches} algorithm with default settings is used. See 'details'.
 #' @param alternate Either -1, 0 or 1. If 0, the series is not alternating.
 #' Otherwise, the series is alternating where the first element's sign is
 #' either 1 or -1, as entered in this parameter. If not 0, arguments \code{logL}
@@ -83,7 +83,7 @@
 #' \eqn{L = 0}, the convergence checking can be reduced and the Error bounding
 #' pairs becomes almost as fast as the Sum-To-Threshold method.
 #' 
-#' The third algorithm is called c-folding method and is used when \eqn{L} is
+#' The third algorithm is called batches method and is used when \eqn{L} is
 #' unknown. Its use requires some fine tuning, so there is a standalone function
 #' for it called \code{\link{infiniteSum_cFolding}}. Its use and functionality
 #' can be seen in its own documentation. When used as a result of this function,
@@ -92,13 +92,13 @@
 #' The \code{forceAlgorithm} parameter can be used to
 #' control which algorithm to use. When it is 0, the program automatically
 #' selects the Sum-to-threshold when \eqn{L < 0.5} and the Error bounding pairs
-#' when \eqn{L < 1} and c-folding when \eqn{L} is left \code{NULL}. If it is
+#' when \eqn{L < 1} and batches when \eqn{L} is left \code{NULL}. If it is
 #' set to 1, then the Sum-To-Threshold algorithm is forced.
 #' If it is 2, then the Error bounding pairs is forced. A small note, the
 #' Error bounding pairs algorithm can go up to \code{maxIter} + 1 function
 #' evaluations. This is due to its convergence checking dependence on
 #' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}. Finally, if the
-#' parameter is set as 3, the c-folding algorithm is used with default settings.
+#' parameter is set as 3, the batches algorithm is used with default settings.
 #' 
 #' If the series is alternating, the Sum-To-Threshold convergence condition on
 #' the series absolute value guarantees the result, regardless of the ratio
@@ -115,7 +115,7 @@
 #' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names
 #' to use.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
-#' that can be used for the summation. \code{\link{infiniteSum_cFolding}} is
+#' that can be used for the summation. \code{\link{infiniteSum_batches}} is
 #' an alternate method which does not require knowledge of the \code{logL}
 #' argument.
 #' @examples
@@ -137,6 +137,7 @@
 #' ## in the precompiled list of functions.
 #' comp_params = c(lambda = 5, nu = 3)
 #' result <- infiniteSum("COMP", comp_params)
+#' result
 #' @export
 infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
                         alternate = 0,  epsilon = 1e-15, maxIter = 1e5, n0 = 0,
@@ -159,7 +160,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
             is.numeric(n0),
             n0 >= 0,
             length(n0) == 1,
-            forceAlgorithm %in% 0:2)
+            forceAlgorithm %in% 0:3)
 
   if (forceAlgorithm == 1 || alternate){
     if (!is.null(logL) && forceAlgorithm == 1)
@@ -192,11 +193,23 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
     return(list(sum = -Inf, n = 0, method = "canceled"))
   }
 
-  if (logL < -log(2))
-    m <- "Sum-to-threshold"
-  else if (logL < 0)
-    m <- "Error bounding pairs"
-  else m <- "c-folding"
+  if (forceAlgorithm == 0)
+    if (is.null(logL) && !is.character(logFunction))
+      m <- "Batches"
+    else {
+      if (is.character(logFunction)) logL <- determineLogL_(logFunction, parameters)
+      if (logL < -log(2))
+        m <- "Sum-to-threshold"
+      else if (logL < 0)
+        m <- "Error bounding pairs"
+      else m <- "Unidentified"
+    } else if (forceAlgorithm == 1)
+      m <- "Sum-to-threshold"
+    else if (forceAlgorithm == 2)
+      m <- "Error bounding pairs"
+    else if (forceAlgorithm == 3)
+      m <- "Batches"
+  
   out$method = m
   class(out) <- "summed"
   out

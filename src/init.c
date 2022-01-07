@@ -11,10 +11,10 @@ void R_init_sumR(DllInfo *info)
   R_RegisterCCallable("sumR", "infiniteSum_", (DL_FUNC) &infiniteSum_);
   R_RegisterCCallable("sumR", "infiniteSumToThreshold_",
                       (DL_FUNC) &infiniteSumToThreshold_);
-  R_RegisterCCallable("sumR", "infiniteAdaptive_",
-                      (DL_FUNC) &infiniteAdaptive_);
-  R_RegisterCCallable("sumR", "infiniteCFolding_",
-                      (DL_FUNC) &infiniteCFolding_);
+  R_RegisterCCallable("sumR", "infiniteErrorBoundingPairs_",
+                      (DL_FUNC) &infiniteErrorBoundingPairs_);
+  R_RegisterCCallable("sumR", "infiniteBatches_",
+                      (DL_FUNC) &infiniteBatches_);
   R_RegisterCCallable("sumR", "sumNTimes_",
                       (DL_FUNC) &sumNTimes_);
 }

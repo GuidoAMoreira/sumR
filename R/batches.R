@@ -1,5 +1,5 @@
 #' Approximates the sum of a positive discrete infinite series with a single
-#' maximum using the c-folding algorithm
+#' maximum using the batches algorithm
 #'
 #' A simple method to perform the summation. It adds the values in batches and
 #' stops when the accumulated batch is smaller than the desired threshold. There
@@ -20,10 +20,9 @@
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
-#' @param c The fold by which \code{N_start} is multiplied to calculate the
-#' checkpoints. See 'details'.
-#' @param N_start The size of the first batch. It is multiplied by \code{c} to
-#' find the next batch end points. See 'details'.
+#' @param batch_size The batch size at which point convergence checking is
+#' performed. The algorithm perform at least twice this number of function
+#' evaluations. See 'details'.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
 #' iterations, that is, the number of times the function was evaluated.
@@ -35,25 +34,23 @@
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} must
 #' converge to a number \eqn{L < 1} when \eqn{n} goes to infinity.
 #'
-#' The c-folding algorithm consists of evaluating the function a fixed number of
+#' The batches algorithm consists of evaluating the function a fixed number of
 #' times for two checkpoints. If the difference between the sum at these
 #' checkpoints is smaller than \code{epsilon}, the code stops and the later
 #' checkpoint sum is returned. Else, continue summing until the next checkpoint.
-#' The first checkpoint is \code{N_start}. The second is \code{N_start} *
-#' \code{c}. Subsequent ones are \code{N_start} * 2\code{c}, \code{N_start} *
-#' 3\code{c} and so on.
+#' All checkpoints are \code{batch_size} long.
 #'
-#' This function's efficiency is reliant on the choice of \code{N_start} and
-#' \code{c}. If they are set too large, the algorithm overshoots the necessary
-#' number of function evaluations too much. If they are set too small, the
+#' This function's efficiency is reliant on the choice of \code{batch_size}.
+#' If it is set too large, the algorithm overshoots the necessary
+#' number of function evaluations too much. If it is set too small, the
 #' algorithm will need to process too many partial summations which slows it
 #' down. However, if they are well calibrated for the series, they can
 #' potentially be very efficient.
 #'
 #' Since the batch sizes are known before the calculations are made,
 #' function evaluations can be vectorized. This is why there are two functions
-#' available. \code{infiniteSum_cFolding} does the calculations at the \code{R}
-#' level, while \code{infiniteSum_cFolding_C} interfaces the low level \code{C}
+#' available. \code{infiniteSum_batches} does the calculations at the \code{R}
+#' level, while \code{infiniteSum_batches_C} interfaces the low level \code{C}
 #' code. However, the \code{C} code does not use vectorization to reduce
 #' dependency on third party libraries, and therefore the \code{R} level
 #' function should be faster in most cases.
@@ -72,7 +69,7 @@
 #' ## Define some function that is known to pass the ratio test.
 #' param = 0.1
 #' funfun <- function(k, p) return(k * log1p(-p[1]))
-#' result <- infiniteSum_cFolding(funfun, parameters = param)
+#' result <- infiniteSum_batches(funfun, parameters = param)
 #'
 #' ## This series is easy to verify analytically
 #' TrueSum = -log(param)
@@ -82,7 +79,7 @@
 #' 
 #' # If we use the C function, it reaches a lower error, but requires more
 #' # iterations
-#' result_C <- infiniteSum_cFolding_C(funfun, parameters = param)
+#' result_C <- infiniteSum_batches_C(funfun, parameters = param)
 #' TrueSum - result_C$sum
 #' result_C$n
 #'
@@ -90,17 +87,20 @@
 #' ## Conway-Maxwell-Poisson distribution. It has already been included
 #' ## in the precompiled list of functions.
 #' comp_params = c(lambda = 5, nu = 3)
-#' result <- infiniteSum_cFolding("COMP", comp_params)
+#' result <- infiniteSum_batches("COMP", comp_params)
 #' # With a specifically chosen argument value, the summation can be done with
 #' # fewer iterations. But it is usually hard to know the ideal choice for
 #' # applications beforehand
 #' result$n
-#' infiniteSum_cFolding("COMP", comp_params, c = 2, N_start = 11)$n
+#' infiniteSum_batches("COMP", comp_params, batch_size = 11)$n
+#' # A small batch_size ensures a small number of iterations, but slows the
+#' # method due to multiple checking.
+#' infiniteSum_batches("COMP", comp_params, batch_size = 2)$n
 #' @importFrom matrixStats logSumExp
 #' @export
-infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
-                                 epsilon = 1e-15, maxIter = 1e5, n0 = 0, c = 2,
-                                 N_start = 20){
+infiniteSum_batches <- function(logFunction, parameters = numeric(),
+                                epsilon = 1e-15, maxIter = 1e5, n0 = 0,
+                                batch_size = 40){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
@@ -115,12 +115,9 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
             is.numeric(n0),
             n0 >= 0,
             length(n0) == 1,
-            is.numeric(c),
-            c > 1,
-            length(c) == 1,
-            is.numeric(N_start),
-            N_start > 0,
-            length(N_start) == 1)
+            is.numeric(batch_size),
+            batch_size > 1,
+            length(batch_size) == 1)
 
   if (is.character(logFunction)){
     if (logFunction == "COMP"){
@@ -136,14 +133,13 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
 
   # Setup
   lEps <- log(epsilon)
-  N_inc <- c * N_start
-  nextCheckPoint <- n0 + N_start - 1
+  nextCheckPoint <- n0 + batch_size
   funValues <- logFunction(n0:nextCheckPoint, parameters)
   lastCheckPoint <- nextCheckPoint + 1
-  nextCheckPoint <- n0 + N_inc - 1
+  nextCheckPoint <- nextCheckPoint + batch_size
   increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
   summedIncrement <- matrixStats::logSumExp(increment)
-  n <- N_inc
+  n <- batch_size * 2
 
   # Convergence checking
   while (n < maxIter && (summedIncrement > lEps ||
@@ -155,24 +151,24 @@ infiniteSum_cFolding <- function(logFunction, parameters = numeric(),
          is.infinite(funValues[length(funValues)]))){
     funValues <- c(funValues, increment)
     lastCheckPoint <- nextCheckPoint + 1
-    nextCheckPoint <- nextCheckPoint + N_inc - 1
+    nextCheckPoint <- nextCheckPoint + batch_size
     increment <- logFunction(lastCheckPoint:nextCheckPoint, parameters)
     summedIncrement <- matrixStats::logSumExp(increment)
-    n <- n + N_inc
+    n <- n + batch_size
   }
   funValues <- c(funValues, increment)
 
   out <- list(sum = matrixStats::logSumExp(sort(funValues)),
-              n = n, method = "c-folding in R")
+              n = n, method = "batches in R")
   class(out) <- "summed"
   out
 }
 
-#' @name infiniteSum_cFolding
+#' @rdname infiniteSum_batches
 #' @export
-infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
-                                   epsilon = 1e-15, maxIter = 1e5, n0 = 0,
-                                   c = 2, N_start = 20){
+infiniteSum_batches_C <- function(logFunction, parameters = numeric(),
+                                  epsilon = 1e-15, maxIter = 1e5, n0 = 0,
+                                  batch_size = 40){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
@@ -186,27 +182,23 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
             is.numeric(n0),
             n0 >= 0,
             length(n0) == 1,
-            is.numeric(c),
-            c > 1,
-            length(c) == 1,
-            is.numeric(N_start),
-            N_start > 0,
-            length(N_start) == 1)
+            is.numeric(batch_size),
+            batch_size > 1,
+            length(batch_size) == 1)
 
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
-  c <- as.integer(c); N_start <- as.integer(N_start)
+  batch_size <- as.integer(batch_size)
 
   if (is.character(logFunction)){
-    out <- .Call("infinite_c_folding_precomp",
-                 logFunction, parameters, epsilon, maxIter, n0, c,
-                 N_start,
+    out <- .Call("infinite_batches_precomp",
+                 logFunction, parameters, epsilon, maxIter, n0, batch_size,
                  PACKAGE = "sumR")
     } else if (is.function(logFunction)) {
     f <- function(k, Theta) logFunction(k, Theta)
 
-    out <- .Call("inf_c_folding",
+    out <- .Call("inf_batches",
                  body(f), parameters, epsilon,
-                 maxIter, n0, new.env(), c, N_start,
+                 maxIter, n0, new.env(), batch_size,
                  PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function
@@ -217,7 +209,7 @@ infiniteSum_cFolding_C <- function(logFunction, parameters = numeric(),
     out
   }
 
-  out$method = "c-folding in C"
+  out$method = "batches in C"
   class(out) <- "summed"
   out
 }

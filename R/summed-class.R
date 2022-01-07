@@ -10,7 +10,7 @@
 #' the number of series elements evaluations performed during the summation.}
 #' \item{\code{method}}{The method used for the summation.}
 #' }
-#' @seealso \code{\link{infiniteSum}}, \code{\link{infiniteSum_cFolding}} and
+#' @seealso \code{\link{infiniteSum}}, \code{\link{infiniteSum_batches}} and
 #' \code{\link{finiteSum}} for available methods.
 NULL
 

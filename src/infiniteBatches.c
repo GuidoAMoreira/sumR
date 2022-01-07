@@ -1,13 +1,13 @@
 #include "sumR.h"
 #include "math.h"
 
-long double infiniteCFolding_(long double logFun(long k, double *Theta),
+long double infiniteBatches_(long double logFun(long k, double *Theta),
                                  double *params, double eps,
                                  long maxIter, long n0, long* n,
-                                 long c, long N_start)
+                                 long batch_size)
 {
   // Declaration
-  long N, N_inc = N_start * c;
+  long N;
   long double maxA, lEps = logl(eps), logFunVal[maxIter + 1],
           partial = 0., *checkStart = logFunVal,
           S = 0., lS, cc = 0., total = 0, test1, test2 = 0.;
@@ -33,12 +33,12 @@ long double infiniteCFolding_(long double logFun(long k, double *Theta),
   // Assumed local max = global max.
   maxA = logFunVal[*n - 1];
   lEps -= maxA; // For the convergence checking
-  while (*n % N_inc && *n < maxIter) // Complete the next checkpoint.
+  while (*n % batch_size && *n < maxIter) // Complete the next batch.
     logFunVal[++*n] = logFun(++n0, params);
-  N = *n == N_inc ? N_start : ((*n - N_inc) / N_inc) * N_inc; // Second to last completed checkpoint.
+  N = ((*n - batch_size) / batch_size) * batch_size; // Second to last batch.
   partial_logSumExp(logFunVal, N, maxA, &cc, 0, &partial);
   checkStart += N + 1; // pointer displacement
-  N = *n == N_inc ? N_inc - N_start - 1 : N_inc - 1; // How many iterations to the last checkpoints.
+  N = batch_size - 1; // How many iterations to the last batch.
   cc = 0.;
   partial_logSumExp(checkStart, N, maxA, &cc, 0, &S);
   test1 = logFunVal[*n] - logFunVal[*n - 1];
@@ -50,13 +50,13 @@ long double infiniteCFolding_(long double logFun(long k, double *Theta),
          *n < maxIter)
   {
     partial += S;
-    for (N = 0, S = 0.; N < (N_inc - 2); N++)
+    for (N = 0, S = 0.; N < (batch_size - 2); N++)
       KahanSum(&S, exp(logFun(++n0, params) - maxA), &cc);
     test1 = logFun(++n0, params);
     KahanSum(&S, exp(test1 - maxA), &cc);
     test2 = logFun(++n0, params);
     KahanSum(&S, exp(test2 - maxA), &cc);
-    *n += N_inc;
+    *n += batch_size;
     lS = logl(S);
   }
 

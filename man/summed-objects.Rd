@@ -30,6 +30,6 @@ the number of series elements evaluations performed during the summation.}
 }
 
 \seealso{
-\code{\link{infiniteSum}}, \code{\link{infiniteSum_cFolding}} and
+\code{\link{infiniteSum}}, \code{\link{infiniteSum_batches}} and
 \code{\link{finiteSum}} for available methods.
 }

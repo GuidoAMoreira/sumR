@@ -57,9 +57,9 @@ static inline long double algorithm_selector(lFptr logF, double *params,
   else if (selector == 1)
     return infiniteSumToThreshold_(logF, params, alternating, eps, mI, n0, n);
   else if (selector == 2)
-    return infiniteAdaptive_(logF, params, eps, mI, lL, n0, n);
+    return infiniteErrorBoundingPairs_(logF, params, eps, mI, lL, n0, n);
   else if (selector == 3)
-    return infiniteCFolding_(logF, params, eps, mI, n0, n, 2, 20);
+    return infiniteBatches_(logF, params, eps, mI, n0, n, 40);
   else
     error("Invalid forceAlgorithm argument.\n");
 }
@@ -73,11 +73,11 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating,
                               SEXP eps, SEXP maxIter, SEXP n0, SEXP forceAlgo);
 
 // Wrappers for the c-folding algorithm
-SEXP inf_c_folding(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-                   SEXP n0, SEXP rho, SEXP c, SEXP N_start);
+SEXP inf_batches(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
+                   SEXP n0, SEXP rho, SEXP batch_size);
 
-SEXP infinite_c_folding_precomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                                SEXP n0, SEXP c, SEXP N_start);
+SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
+                                SEXP n0, SEXP batch_size);
 
 // Wrappers for the fixed iterations algorithm
 SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0);
