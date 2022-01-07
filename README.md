@@ -111,12 +111,12 @@ The interfaced functions from sumR are:
 ``` c
 long double infiniteSum(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, double logL, long n0, long* n);
 long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, long n0, long* n);
-long double infiniteAdaptive(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
-long double infiniteCFolding(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long c, long N_start);
+long double infiniteErrorBoundingPairs(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
+long double infiniteBatches(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long batch_size);
 long double sumNTimes(long double logFun(long k, double *Theta), double *params, long n, long n0);
 ```
 
-Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold` or `infiniteAdaptive` depending on the value of `logL` and returns the result of the respectively chosen function.
+Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold`, `infiniteErrorBounding` or `infiniteBatches` depending on the value of `logL` and returns the result of the respectively chosen function. Namely, it is the first if `logL` < log(0.5), the second if `logL` < 0 and the third otherwise.
 
 See the help documentation in the sumR package for information about the interfaced function arguments. `sumNTimes` is documented under `finiteSum`.
 

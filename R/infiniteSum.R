@@ -85,18 +85,18 @@
 #' 
 #' The third algorithm is called batches method and is used when \eqn{L} is
 #' unknown. Its use requires some fine tuning, so there is a standalone function
-#' for it called \code{\link{infiniteSum_cFolding}}. Its use and functionality
+#' for it called \code{\link{infiniteSum_batches}}. Its use and functionality
 #' can be seen in its own documentation. When used as a result of this function,
 #' default settings are used.
 #'
 #' The \code{forceAlgorithm} parameter can be used to
 #' control which algorithm to use. When it is 0, the program automatically
 #' selects the Sum-to-threshold when \eqn{L < 0.5} and the Error bounding pairs
-#' when \eqn{L < 1} and batches when \eqn{L} is left \code{NULL}. If it is
-#' set to 1, then the Sum-To-Threshold algorithm is forced.
-#' If it is 2, then the Error bounding pairs is forced. A small note, the
-#' Error bounding pairs algorithm can go up to \code{maxIter} + 1 function
-#' evaluations. This is due to its convergence checking dependence on
+#' when \eqn{0.5 \le L < 1}. Method batches is selected when \eqn{L} is left
+#' \code{NULL}. If \code{forceAlgorithm} is set to 1, the Sum-To-Threshold
+#' algorithm is forced. If it is 2, then the Error bounding pairs is forced. A
+#' small note, the Error bounding pairs algorithm can go up to \code{maxIter} +
+#' 1 function evaluations. This is due to its convergence checking dependence on
 #' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}. Finally, if the
 #' parameter is set as 3, the batches algorithm is used with default settings.
 #' 
@@ -112,8 +112,8 @@
 #'
 #' The advanced user can program their own precompiled functions and use the
 #' package's summation algorithms by linking the appropriate header file. See
-#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the names
-#' to use.
+#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the a
+#' quick tutorial.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
 #' that can be used for the summation. \code{\link{infiniteSum_batches}} is
 #' an alternate method which does not require knowledge of the \code{logL}
