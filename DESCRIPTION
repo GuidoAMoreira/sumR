@@ -12,7 +12,7 @@ Description: Application of theoretical results which ensure that the summation
   of an infinite discrete series is within an arbitrary margin of error of its
   true value. The C code under the hood is shared through header files to allow
   users to sum their own low level functions as well.
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Imports:
