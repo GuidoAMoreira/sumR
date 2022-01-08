@@ -116,7 +116,7 @@ long double infiniteBatches(long double logFun(long k, double *Theta), double *p
 long double sumNTimes(long double logFun(long k, double *Theta), double *params, long n, long n0);
 ```
 
-Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold`, `infiniteErrorBounding` or `infiniteBatches` depending on the value of `logL` and returns the result of the respectively chosen function. Namely, it is the first if `logL` < log(0.5), the second if `logL` < 0 and the third otherwise.
+Function `infiniteSum` dispatches the arguments to `infiniteSumToThreshold`, `infiniteErrorBoundingPairs` or `infiniteBatches` depending on the value of `logL` and returns the result of the respectively chosen function. Namely, it is the first if `logL` < log(0.5), the second if `logL` < 0 and the third otherwise.
 
 See the help documentation in the sumR package for information about the interfaced function arguments. `sumNTimes` is documented under `finiteSum`.
 
