@@ -39,7 +39,7 @@ double sum_series(double param)
 
   parameter[0] = param;
 
-  r = infiniteSum(some_series, parameter, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
+  r = infiniteSum(some_series, parameter, 0, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
   
   Rcpp::Rcout << "Summation took " << n << " iterations to converge.\\n";
 
@@ -82,7 +82,7 @@ SEXP sum_series(SEXP param)
 
   parameter[0] = REAL(param)[0];
 
-  r = infiniteSum(some_series, parameter, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
+  r = infiniteSum(some_series, parameter, 0, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
   
   Rprintf("Summation took %d iterations to converge.\n", n);
   
