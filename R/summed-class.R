@@ -17,7 +17,7 @@ NULL
 #' @rdname summed-objects
 #' @param x The \code{summed} object.
 #' @param ... Currently unused.
-#' @return The invisible object.
+#' @return For \code{print}: The invisible object.
 #' @method print summed
 #' @export
 print.summed <- function(x, ...) {
@@ -25,3 +25,11 @@ print.summed <- function(x, ...) {
       "the sum in the log scale: ", x$sum, sep = "")
   invisible(x)
 }
+
+#' @rdname summed-objects
+#' @param x The \code{summed} object.
+#' @param ... Currently unused.
+#' @return For \code{as.numeric}/\code{as.double}: The approximated sum.
+#' @method as.double summed
+#' @export
+as.double.summed <- function(x, ...) x$sum

@@ -185,7 +185,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
     f <- function(k, Theta) logFunction(k, Theta)
 
     out <- .Call("inf_sum",
-                body(f), parameters, alternate, epsilon, maxIter, logL, n0,
+                body(f), parameters, logL, alternate, epsilon, maxIter, n0,
                 new.env(), forceAlgorithm,
                 PACKAGE = "sumR")
   } else {

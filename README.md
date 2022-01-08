@@ -39,7 +39,7 @@ double sum_series(double param)
 
   parameter[0] = param;
 
-  r = infiniteSum(some_series, parameter, 0, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
+  r = infiniteSum(some_series, parameter, log1p(-parameter[0]), 0, exp(-35), 100000, 0, &n);
   
   Rcpp::Rcout << "Summation took " << n << " iterations to converge.\\n";
 
@@ -82,7 +82,7 @@ SEXP sum_series(SEXP param)
 
   parameter[0] = REAL(param)[0];
 
-  r = infiniteSum(some_series, parameter, 0, exp(-35), 100000, log1p(-parameter[0]), 0, &n);
+  r = infiniteSum(some_series, parameter, log1p(-parameter[0]), 0, exp(-35), 100000, 0, &n);
   
   Rprintf("Summation took %d iterations to converge.\n", n);
   
@@ -109,10 +109,10 @@ sumSeries(0.08)
 The interfaced functions from sumR are:
 
 ``` c
-long double infiniteSum(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, double logL, long n0, long* n);
+long double infiniteSum(long double logFun(long k, double *Theta), double *params, double logL, int alternating, double eps, long maxIter, long n0, long* n);
 long double infiniteSumToThreshold(long double logFun(long k, double *Theta), double *params, int alternating, double eps, long maxIter, long n0, long* n);
-long double infiniteErrorBoundingPairs(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, double logL, long n0, long* n);
-long double infiniteBatches(long double logFun(long k, double *Theta), double *params, double eps, long maxIter, long n0, long* n, long batch_size);
+long double infiniteErrorBoundingPairs(long double logFun(long k, double *Theta), double *params, double logL, double eps, long maxIter, long n0, long* n);
+long double infiniteBatches(long double logFun(long k, double *Theta), double *params, long batch_size, double eps, long maxIter, long n0, long* n);
 long double sumNTimes(long double logFun(long k, double *Theta), double *params, long n, long n0);
 ```
 

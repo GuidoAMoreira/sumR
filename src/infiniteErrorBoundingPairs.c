@@ -2,8 +2,8 @@
 #include "math.h"
 
 long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta),
-                       double *params, double eps,
-                       long maxIter, double logL, long n0, long* n)
+                       double *params, double logL, double eps,
+                       long maxIter, long n0, long* n)
 {
   // Declaration
   long nMax;

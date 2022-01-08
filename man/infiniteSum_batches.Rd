@@ -9,19 +9,19 @@ maximum using the batches algorithm}
 infiniteSum_batches(
   logFunction,
   parameters = numeric(),
+  batch_size = 40,
   epsilon = 1e-15,
   maxIter = 1e+05,
-  n0 = 0,
-  batch_size = 40
+  n0 = 0
 )
 
 infiniteSum_batches_C(
   logFunction,
   parameters = numeric(),
+  batch_size = 40,
   epsilon = 1e-15,
   maxIter = 1e+05,
-  n0 = 0,
-  batch_size = 40
+  n0 = 0
 )
 }
 \arguments{
@@ -38,16 +38,16 @@ the second must be a vector of numeric parameters.}
 Vectorized summation over various parameter values sets is not implemented.
 Use \code{\link{apply}} or their variants to achieve this.}
 
+\item{batch_size}{The batch size at which point convergence checking is
+performed. The algorithm perform at least twice this number of function
+evaluations. See 'details'.}
+
 \item{epsilon}{The desired error margin for the approximation. See 'details'.}
 
 \item{maxIter}{The maximum number of iterations for the approximation. In
 most cases, this number will not be reached unless it is very small.}
 
 \item{n0}{The sum will be approximated for the series starting at this value.}
-
-\item{batch_size}{The batch size at which point convergence checking is
-performed. The algorithm perform at least twice this number of function
-evaluations. See 'details'.}
 }
 \value{
 A list with two named members, \code{sum} and \code{n}. \code{sum} is

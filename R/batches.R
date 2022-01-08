@@ -16,13 +16,13 @@
 #' @param parameters A numeric vector with parameters used in logFunction.
 #' Vectorized summation over various parameter values sets is not implemented.
 #' Use \code{\link{apply}} or their variants to achieve this.
+#' @param batch_size The batch size at which point convergence checking is
+#' performed. The algorithm perform at least twice this number of function
+#' evaluations. See 'details'.
 #' @param epsilon The desired error margin for the approximation. See 'details'.
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
-#' @param batch_size The batch size at which point convergence checking is
-#' performed. The algorithm perform at least twice this number of function
-#' evaluations. See 'details'.
 #' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
 #' the approximated value in the log scale and \code{n} is the total number of
 #' iterations, that is, the number of times the function was evaluated.
@@ -99,12 +99,15 @@
 #' @importFrom matrixStats logSumExp
 #' @export
 infiniteSum_batches <- function(logFunction, parameters = numeric(),
-                                epsilon = 1e-15, maxIter = 1e5, n0 = 0,
-                                batch_size = 40){
+                                batch_size = 40, epsilon = 1e-15, maxIter = 1e5,
+                                n0 = 0){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
             is.numeric(parameters),
+            is.numeric(batch_size),
+            batch_size > 1,
+            length(batch_size) == 1,
             is.numeric(epsilon),
             epsilon > 0,
             length(epsilon) == 1,
@@ -114,10 +117,7 @@ infiniteSum_batches <- function(logFunction, parameters = numeric(),
             length(maxIter) == 1,
             is.numeric(n0),
             n0 >= 0,
-            length(n0) == 1,
-            is.numeric(batch_size),
-            batch_size > 1,
-            length(batch_size) == 1)
+            length(n0) == 1)
 
   if (is.character(logFunction)){
     if (logFunction == "COMP"){
@@ -167,12 +167,15 @@ infiniteSum_batches <- function(logFunction, parameters = numeric(),
 #' @rdname infiniteSum_batches
 #' @export
 infiniteSum_batches_C <- function(logFunction, parameters = numeric(),
-                                  epsilon = 1e-15, maxIter = 1e5, n0 = 0,
-                                  batch_size = 40){
+                                  batch_size = 40, epsilon = 1e-15,
+                                  maxIter = 1e5, n0 = 0){
 
   stopifnot(is.function(logFunction) || is.character(logFunction),
             length(logFunction) == 1,
             is.numeric(parameters),
+            is.numeric(batch_size),
+            batch_size > 1,
+            length(batch_size) == 1,
             is.numeric(epsilon),
             epsilon > 0,
             length(epsilon) == 1,
@@ -181,24 +184,21 @@ infiniteSum_batches_C <- function(logFunction, parameters = numeric(),
             length(maxIter) == 1,
             is.numeric(n0),
             n0 >= 0,
-            length(n0) == 1,
-            is.numeric(batch_size),
-            batch_size > 1,
-            length(batch_size) == 1)
+            length(n0) == 1)
 
   maxIter <- as.integer(maxIter); n0 <- as.integer(n0)
   batch_size <- as.integer(batch_size)
 
   if (is.character(logFunction)){
     out <- .Call("infinite_batches_precomp",
-                 logFunction, parameters, epsilon, maxIter, n0, batch_size,
+                 logFunction, parameters, batch_size, epsilon, maxIter, n0,
                  PACKAGE = "sumR")
     } else if (is.function(logFunction)) {
     f <- function(k, Theta) logFunction(k, Theta)
 
     out <- .Call("inf_batches",
-                 body(f), parameters, epsilon,
-                 maxIter, n0, new.env(), batch_size,
+                 body(f), parameters, batch_size, epsilon,
+                 maxIter, n0, new.env(),
                  PACKAGE = "sumR")
   } else {
     warning('Argument lFun must either be the name of a precompiled function

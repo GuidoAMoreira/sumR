@@ -3,9 +3,12 @@
 \name{summed-objects}
 \alias{summed-objects}
 \alias{print.summed}
+\alias{as.double.summed}
 \title{S3 Class for objects containing iterated summations}
 \usage{
 \method{print}{summed}(x, ...)
+
+\method{as.double}{summed}(x, ...)
 }
 \arguments{
 \item{x}{The \code{summed} object.}
@@ -13,7 +16,9 @@
 \item{...}{Currently unused.}
 }
 \value{
-The invisible object.
+For \code{print}: The invisible object.
+
+For \code{as.numeric}/\code{as.double}: The approximated sum.
 }
 \description{
 Contains the summations in the log scale. The value can either be an

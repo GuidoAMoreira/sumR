@@ -88,8 +88,8 @@ lFptr precompiled_selector(SEXP funS, double *logL,
   error("Compiled function not found.");
 }
 
-SEXP inf_sum(SEXP logFun, SEXP params, SEXP alternating, SEXP eps, SEXP maxIter,
-             SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo)
+SEXP inf_sum(SEXP logFun, SEXP params, SEXP logL, SEXP alternating, SEXP eps,
+             SEXP maxIter, SEXP n0, SEXP rho, SEXP forceAlgo)
 {
   defineVar(install("Theta"), params, rho);
   long double out;
@@ -125,8 +125,8 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating, SEXP eps,
 
 //////// c-folding wrappers
 
-SEXP inf_batches(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-                   SEXP n0, SEXP rho, SEXP batch_size)
+SEXP inf_batches(SEXP logFun, SEXP params, SEXP batch_size, SEXP eps,
+                 SEXP maxIter, SEXP n0, SEXP rho)
 {
   defineVar(install("Theta"), params, rho);
   long double out;
@@ -136,15 +136,15 @@ SEXP inf_batches(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
   envir = rho;
   lF = logFun;
 
-  out = infiniteBatches_(translator, REAL(params), REAL(eps)[0],
-                          INTEGER(maxIter)[0], INTEGER(n0)[0], &n,
-                          INTEGER(batch_size)[0]);
+  out = infiniteBatches_(translator, REAL(params),
+                         INTEGER(batch_size)[0], REAL(eps)[0],
+                         INTEGER(maxIter)[0], INTEGER(n0)[0], &n);
 
   return retFun((double)out, n);
 }
 
-SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP epsilon,
-                                SEXP maxIter, SEXP n0, SEXP batch_size)
+SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP batch_size,
+                              SEXP epsilon, SEXP maxIter, SEXP n0)
 {
   long double out;
   long n;
@@ -152,9 +152,9 @@ SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP epsilon,
 
   out = infiniteBatches_(precompiled_selector(lF, &logL, REAL(params),
                                                Rf_xlength(params)),
-                          REAL(params), REAL(epsilon)[0],
-                          INTEGER(maxIter)[0], INTEGER(n0)[0], &n,
-                          INTEGER(batch_size)[0]);
+                          REAL(params), INTEGER(batch_size)[0],
+                          REAL(epsilon)[0], INTEGER(maxIter)[0],
+                          INTEGER(n0)[0], &n);
 
   return retFun((double)out, n);
 }

@@ -2,9 +2,8 @@
 #include "math.h"
 
 long double infiniteBatches_(long double logFun(long k, double *Theta),
-                                 double *params, double eps,
-                                 long maxIter, long n0, long* n,
-                                 long batch_size)
+                                 double *params, long batch_size, double eps,
+                                 long maxIter, long n0, long* n)
 {
   // Declaration
   long N;

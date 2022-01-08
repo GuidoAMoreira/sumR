@@ -53,31 +53,31 @@ static inline long double algorithm_selector(lFptr logF, double *params,
                                              int selector, long *n)
 {
   if (selector == 0 || alternating)
-    return infiniteSum_(logF, params, alternating, eps, mI, lL, n0, n);
+    return infiniteSum_(logF, params, lL, alternating, eps, mI, n0, n);
   else if (selector == 1)
     return infiniteSumToThreshold_(logF, params, alternating, eps, mI, n0, n);
   else if (selector == 2)
-    return infiniteErrorBoundingPairs_(logF, params, eps, mI, lL, n0, n);
+    return infiniteErrorBoundingPairs_(logF, params, lL, eps, mI, n0, n);
   else if (selector == 3)
-    return infiniteBatches_(logF, params, eps, mI, n0, n, 40);
+    return infiniteBatches_(logF, params, 40, eps, mI, n0, n);
   else
     error("Invalid forceAlgorithm argument.\n");
 }
 
 // Wrapper for R defined function
-SEXP inf_sum(SEXP logFun, SEXP params, SEXP alternating, SEXP eps, SEXP maxIter,
-             SEXP logL, SEXP n0, SEXP rho, SEXP forceAlgo);
+SEXP inf_sum(SEXP logFun, SEXP params, SEXP logL, SEXP alternating, SEXP eps,
+             SEXP maxIter, SEXP n0, SEXP rho, SEXP forceAlgo);
 
 // Wrapper for C pre-compiled code
 SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating,
                               SEXP eps, SEXP maxIter, SEXP n0, SEXP forceAlgo);
 
 // Wrappers for the c-folding algorithm
-SEXP inf_batches(SEXP logFun, SEXP params, SEXP eps, SEXP maxIter,
-                   SEXP n0, SEXP rho, SEXP batch_size);
+SEXP inf_batches(SEXP logFun, SEXP params, SEXP batch_size, SEXP eps,
+                 SEXP maxIter, SEXP n0, SEXP rho);
 
-SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP epsilon, SEXP maxIter,
-                                SEXP n0, SEXP batch_size);
+SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP batch_size,
+                              SEXP epsilon, SEXP maxIter, SEXP n0);
 
 // Wrappers for the fixed iterations algorithm
 SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0);

@@ -10,7 +10,7 @@ extern "C" {
 
 // Approximates infinite sum with an adaptive truncation
 long double infiniteErrorBoundingPairs_(long double (long k, double *Theta), double*,
-                        double, long, double, long, long*);
+                                        double, double, long, long, long*);
 
 // Approximates infinite sum by summing until added value is smaller than threshold
 long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
@@ -19,14 +19,13 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
 // Approximates infinite sum by summing in batches until the batch addes up to
 // less than the desired margin
 long double infiniteBatches_(long double logFun(long k, double *Theta),
-                              double*, double, long, long, long*,
-                              long);
+                              double*, long, double, long, long, long*);
 
 // Dispatches infiniteAdaptive or inviniteSumToThreshold based on logL value
 long double infiniteSum_(
     long double logFun(long k, double *Theta),
-    double *params, int alternating, double eps,
-    long maxIter, double logL, long n0, long* n);
+    double *params, double logL, int alternating, double eps,
+    long maxIter, long n0, long* n);
 
 // Sum N times with no convergence checking
 long double sumNTimes_(
