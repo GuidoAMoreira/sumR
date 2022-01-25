@@ -49,7 +49,7 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
 
   // Calculate the tail. Only loop once.
   // test1 and test2 are required for correct convergence condition
-  while ((lS > lEps || test2 - test1 > -log1pl(expl(logFunVal[*n] - lS))) &&
+  while ((lS > lEps || test2 - test1 > -log1pl(expl(test2 - lS))) &&
          *n < maxIter)
   {
     partial += S;
