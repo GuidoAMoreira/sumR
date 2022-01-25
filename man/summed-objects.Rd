@@ -31,6 +31,8 @@ approximation to an infinite series or a finite sum.
 \item{\code{n}}{The performed number of iterations. This value represents
 the number of series elements evaluations performed during the summation.}
 \item{\code{method}}{The method used for the summation.}
+\item{\code{maxReached}}{\code{TRUE} or \code{FALSE}. Indicates whether the
+maximum iterations was reached.}
 }
 }
 

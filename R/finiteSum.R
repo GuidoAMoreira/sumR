@@ -49,6 +49,7 @@ finiteSum <- function(logFunction, parameters = numeric(), n, n0 = 0){
       n = n)
 
   out$method <- "Finite sum"
+  out$maxReached <- TRUE
   class(out) <- "summed"
   out
 }

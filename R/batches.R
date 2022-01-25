@@ -158,7 +158,7 @@ infiniteSum_batches <- function(logFunction, parameters = numeric(),
   funValues <- c(funValues, increment)
 
   out <- list(sum = matrixStats::logSumExp(sort(funValues)),
-              n = n, method = "batches in R")
+              n = n, method = "Batches in R", maxReached = n >= maxIter)
   class(out) <- "summed"
   out
 }
@@ -208,7 +208,8 @@ infiniteSum_batches_C <- function(logFunction, parameters = numeric(),
     out
   }
 
-  out$method = "batches in C"
+  out$method <- "Batches in C"
+  out$maxReached <- out$n >= maxIter
   class(out) <- "summed"
   out
 }

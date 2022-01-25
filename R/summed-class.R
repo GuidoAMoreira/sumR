@@ -9,6 +9,8 @@
 #' \item{\code{n}}{The performed number of iterations. This value represents
 #' the number of series elements evaluations performed during the summation.}
 #' \item{\code{method}}{The method used for the summation.}
+#' \item{\code{maxReached}}{\code{TRUE} or \code{FALSE}. Indicates whether the
+#' maximum iterations was reached.}
 #' }
 #' @seealso \code{\link{infiniteSum}}, \code{\link{infiniteSum_batches}} and
 #' \code{\link{finiteSum}} for available methods.
@@ -21,7 +23,9 @@ NULL
 #' @method print summed
 #' @export
 print.summed <- function(x, ...) {
-  cat("Method ", x$method, " performed ", x$n, " iterations and reached ",
+  cat("Method ", x$method, " performed ",
+      ifelse(x$maxReached, "the maximum of ", ""),
+      x$n, " iterations and reached ",
       "the sum in the log scale: ", x$sum, sep = "")
   invisible(x)
 }

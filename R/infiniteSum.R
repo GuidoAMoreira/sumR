@@ -194,7 +194,7 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
 
   if (forceAlgorithm == 0)
     if (is.null(logL) && !is.character(logFunction))
-      m <- "Batches"
+      m <- "Batches in C"
     else {
       if (is.character(logFunction)) logL <- determineLogL_(logFunction, parameters)
       if (logL < -log(2))
@@ -209,7 +209,8 @@ infiniteSum <- function(logFunction, parameters = numeric(), logL = NULL,
     else if (forceAlgorithm == 3)
       m <- "Batches"
   
-  out$method = m
+  out$method <- m
+  out$maxReached <- out$n >= maxIter
   class(out) <- "summed"
   out
 }
