@@ -123,7 +123,7 @@ SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating, SEXP eps,
   return retFun((double)out, n);
 }
 
-//////// c-folding wrappers
+//////// batches wrappers
 
 SEXP inf_batches(SEXP logFun, SEXP params, SEXP batch_size, SEXP eps,
                  SEXP maxIter, SEXP n0, SEXP rho)

@@ -1,4 +1,4 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 

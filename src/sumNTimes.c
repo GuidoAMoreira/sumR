@@ -1,11 +1,12 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "math.h"
 
 long double sumNTimes_(long double logFun(long, double *Theta),
                       double *params, long N, long n0)
 {
   // Declaration
-  long double maxA, logFunVal[N + 1], total = 0., totalBack = 0., c = 0., cb = 0.;
+  long double maxA, total = 0., totalBack = 0., c = 0., cb = 0.,
+    *logFunVal = R_Calloc((size_t)N + 1, long double);
   long n = 0, nMax;
 
   // Finding function max.
@@ -36,6 +37,7 @@ long double sumNTimes_(long double logFun(long, double *Theta),
     logFunVal[++n] = logFun(++n0, params);
   while (n < N);
   partial_logSumExp(&logFunVal[nMax], n - nMax, maxA, &cb, 1, &totalBack);
-
+  
+  R_Free(logFunVal);
   return maxA + log1pl(total + totalBack);
 }

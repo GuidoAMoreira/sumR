@@ -1,4 +1,4 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "math.h"
 
 long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta),
@@ -7,8 +7,9 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
 {
   // Declaration
   long nMax;
-  long double maxA, logFunVal[maxIter + 1], lEps = logl(eps) + LOG_2, total = 0.,
-    totalBack = 0., log1mL = Rf_logspace_sub(0, logL), c = 0., cb = 0.;
+  long double maxA, lEps = logl(eps) + LOG_2, total = 0.,
+    totalBack = 0., log1mL = Rf_logspace_sub(0, logL), c = 0., cb = 0.,
+    *logFunVal = R_Calloc((size_t)(maxIter + 1), long double);
   *n = 0;
 
   // Find the maximum
@@ -25,7 +26,10 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
   if (*n == maxIter)
   {
     partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
-    return logFunVal[*n] + log1p(total);
+    long double result = logFunVal[*n] + log1p(total);
+    
+    R_Free(logFunVal);
+    return result;
   }
 
   // I know which is the max due to the stop criteria.
@@ -50,6 +54,7 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
     Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]) - LOG_2 -
     maxA), &cb);
   partial_logSumExp(&logFunVal[nMax], *n - nMax - 1, maxA, &cb, 1, &totalBack);
-
+  
+  R_Free(logFunVal);
   return maxA + log1pl(total + totalBack);
 }

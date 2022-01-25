@@ -1,4 +1,4 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "math.h"
 
 long double infiniteSum_(

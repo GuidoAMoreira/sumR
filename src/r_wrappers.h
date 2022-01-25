@@ -2,7 +2,7 @@
 #define __SUMR_RWRAPPERS_H__
 
 #include <Rinternals.h>
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "precompiled.h"
 
 double Rf_logspace_add(double, double);

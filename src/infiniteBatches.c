@@ -1,4 +1,4 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "math.h"
 
 long double infiniteBatches_(long double logFun(long k, double *Theta),
@@ -7,9 +7,10 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
 {
   // Declaration
   long N;
-  long double maxA, lEps = logl(eps), logFunVal[maxIter + 1],
-          partial = 0., *checkStart = logFunVal,
-          S = 0., lS, cc = 0., total = 0, test1, test2 = 0.;
+  long double maxA, lEps = logl(eps),
+    *logFunVal = R_Calloc((size_t)(maxIter + 1), long double),
+    partial = 0., *checkStart = logFunVal,
+    S = 0., lS, cc = 0., total = 0, test1, test2 = 0.;
   *n = 0;
 
   logFunVal[*n] = logFun(n0, params);
@@ -25,7 +26,10 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
   if (*n == maxIter)
   {
     partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &cc, 0, &total);
-    return logFunVal[*n] + log1pl(total);
+    long double result = logFunVal[*n] + log1pl(total);
+    
+    R_Free(logFunVal);
+    return result;
   }
 
   // I know which is the max due to the stop criteria.
@@ -58,6 +62,7 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
     *n += batch_size;
     lS = logl(S);
   }
-
+  
+  R_Free(logFunVal);
   return maxA + logl(partial + S);
 }

@@ -1,4 +1,4 @@
-#include "sumR.h"
+#include "sumR_internal.h"
 #include "math.h"
 
 long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
@@ -8,10 +8,10 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
   // Declaration
   long nMax;
   int alt = alternating;
-  long double maxA, lEps = logl(eps), logFunVal[maxIter + 1], total = 0.,
-    totalBack = 0., c = 0., cb = 0.;
+  long double maxA, lEps = logl(eps), total = 0., totalBack = 0., c = 0.,
+    cb = 0., *logFunVal = R_Calloc((size_t)(maxIter + 1), long double);
   *n = 0;
-
+  
   // Finding function max. Only check convergence after max is reached
   logFunVal[*n] = logFun(n0, params);
   while (!R_FINITE(logFunVal[*n]))
@@ -20,7 +20,7 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
   do
     logFunVal[++*n] = logFun(++n0, params);
   while (logFunVal[*n] >= logFunVal[*n - 1] && *n <= (maxIter - 1));
-
+  
   // If too many iterations. Last iter is max.
   if (*n == maxIter)
   {
@@ -29,9 +29,12 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
                                   &total, &alt);
     else
       partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
-    return logFunVal[*n] + log1pl(total);
+    long double result = logFunVal[*n] + log1pl(total);
+    
+    if (logFunVal != NULL) R_Free(logFunVal);
+    return result;
   }
-
+  
   // I know which is the max due to the stop criteria.
   // Assumed local max = global max.
   maxA = logFunVal[*n - 1];
@@ -43,8 +46,8 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
     else
       partial_logSumExp(logFunVal, *n - 2, maxA, &c, 0, &total);
   }
-
-  // Calculate the tail. Only loop once.
+  
+  // Calculate the tail
   do
     logFunVal[++*n] = logFun(++n0, params);
   while (logFunVal[*n] >= lEps && (*n <= (maxIter - 1)));
@@ -53,7 +56,8 @@ long double infiniteSumToThreshold_(long double logFun(long k, double *Theta),
                                 &totalBack, &alt);
   else
     partial_logSumExp(&logFunVal[nMax], *n - nMax, maxA, &cb, 1, &totalBack);
-
+  
+  if (logFunVal != NULL) R_Free(logFunVal);
   if (alternating)
     return maxA + logl(total + totalBack);
   else
