@@ -136,6 +136,7 @@ infiniteSum_batches <- function(logFunction, parameters = numeric(),
       logFunction <- bessel_I_logX
     } else
       stop("log function not found.")
+    if (any(is.infinite(parameters))) stop("Parameters must be finite.")
   }
 
   # Setup

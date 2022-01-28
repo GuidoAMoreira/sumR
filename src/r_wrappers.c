@@ -14,12 +14,15 @@ lFptr precompiled_selector(SEXP funS, double *logL,
       error("Parameter Eta must be in (0,1).");
     if (params[3] <= 0 || (int)params[3] != params[3])
       error("Parameter obsX must be an integer.");
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]) || !R_FINITE(params[2]) ||
+        !R_FINITE(params[3])) error("Parameters must be finite.");
     *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
       log1p(-params[2]);
     return negbin_marginal;
   }
   if compareStr("noObs"){
     checkSize(size, 1);
+    if (!R_FINITE(params[0])) error("Parameter must be finite.");
     *logL = log1p(-params[0]);
     return noObs;
   }
@@ -27,28 +30,38 @@ lFptr precompiled_selector(SEXP funS, double *logL,
     checkSize(size, 2);
     if (params[0] <= 0 || params[1] <= 0)
       error("Parameters must be positive.");
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
     *logL = -INFINITY;
     return COMP;
   }
   if compareStr("dR0"){
     checkSize(size, 4);
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]) || !R_FINITE(params[2]) ||
+        !R_FINITE(params[3])) error("Parameters must be finite.");
     *logL = log(params[0]) + log1p(-params[3]) +
       (1 + params[1]) * (log1p(params[1]) - log(params[0] + params[1]));
     return dR0;
   }
   if compareStr("powerLawDiff"){
     checkSize(size, 3);
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]) || !R_FINITE(params[2]))
+      error("Parameters must be finite.");
     *logL = log(0.9999);
     return powerLawDiff;
   }
   if compareStr("negbin_sentinel"){
     checkSize(size, 3);
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]) || !R_FINITE(params[2]))
+      error("Parameters must be finite.");
     *logL = log(params[0]) - Rf_logspace_add(log(params[0]), log(params[1])) +
       log1p(-params[2]);
     return negbin_sentinel;
   }
   if compareStr("poisson_sentinel"){
     checkSize(size, 2);
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
     *logL = -INFINITY;
     return poisson_sentinel;
   }
@@ -59,6 +72,7 @@ lFptr precompiled_selector(SEXP funS, double *logL,
   }
   if compareStr("weird_series"){
     checkSize(size, 1);
+    if (!R_FINITE(params[0])) error("Parameter must be finite.");
     *logL = -1;
     return weird_series;
   }
@@ -66,27 +80,35 @@ lFptr precompiled_selector(SEXP funS, double *logL,
     checkSize(size, 2);
     if (params[0] <= 0 || params[1] <= 0)
       error("Parameters must be positive.");
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
     *logL = -INFINITY;
     return dbl_poisson;
   }
   if compareStr("bessel_I"){
     checkSize(size, 2);
-    *logL = -INFINITY;
     if (params[0] <= 0)
       error("Parameter x must be positive.");
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
+    *logL = -INFINITY;
     return bessel_I;
   }
   if (compareStr("poisson_fact_moment")){
     checkSize(size, 2);
-    *logL = -INFINITY;
     if (params[0] <= 0)
       error("Parameter lambda must be positive.");
     if (params[1] <= 1)
       error("Parameter order must be larger than 1.");
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
+    *logL = -INFINITY;
     return poisson_fact_moment;
   }
   if compareStr("bessel_I_logX"){
     checkSize(size, 2);
+    if (!R_FINITE(params[0]) || !R_FINITE(params[1]))
+      error("Parameters must be finite.");
     *logL = -INFINITY;
     return bessel_I_logX;
   }
