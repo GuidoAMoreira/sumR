@@ -127,6 +127,14 @@ infiniteSum_batches <- function(logFunction, parameters = numeric(),
       stopifnot(length(parameters) == 2)
       logFunction <- dbl_poisson
     } else
+    if (logFunction == "bessel_I"){
+      stopifnot(length(parameters) == 2)
+      logFunction <- bessel_I
+    } else
+    if (logFunction == "bessel_I_logX"){
+      stopifnot(length(parameters) == 2)
+      logFunction <- bessel_I_logX
+    } else
       stop("log function not found.")
   }
 

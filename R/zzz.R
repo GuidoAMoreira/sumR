@@ -7,6 +7,16 @@ dbl_poisson <- function(k, Theta)
     0.5 * log(Theta[2]) - (Theta[1] - k) * Theta[2] - k +
     k * (1 - Theta[2]) * log(k) - lfactorial(k) + Theta[2] * k * log(Theta[1]))
 
+# Modified bessel function of the first kind
+bessel_I <- function(k, Theta)
+  (2 * k + Theta[2]) * (log(Theta[1]) - log(2)) - lgamma(k + 1) -
+  lgamma(Theta[2] + k + 1)
+
+# Modified bessel function of the first kind with log argument
+bessel_I_logX <- function(k, Theta)
+  (2 * k + Theta[2]) * (Theta[1] - log(2)) - lgamma(k + 1) -
+  lgamma(Theta[2] + k + 1)
+
 # Determining logL based on character logFunction to name the method used in C
 determineLogL_ <- function(lF, p) {
   if (lF == "COMP") return(-Inf)
