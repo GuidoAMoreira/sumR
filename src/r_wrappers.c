@@ -85,6 +85,11 @@ lFptr precompiled_selector(SEXP funS, double *logL,
       error("Parameter order must be larger than 1.");
     return poisson_fact_moment;
   }
+  if compareStr("bessel_I_logX"){
+    checkSize(size, 2);
+    *logL = -INFINITY;
+    return bessel_I_logX;
+  }
   error("Compiled function not found.");
 }
 

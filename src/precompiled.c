@@ -77,3 +77,9 @@ long double poisson_fact_moment(long k, double *Theta) {
   return Rf_dpois(k, Theta[0], 1) +
     lgammal(k + 1) - lgammal(k - Theta[1] + 1);
 }
+
+long double bessel_I_logX(long k, double *Theta)
+{
+  return (2 * k + Theta[1]) * (Theta[0] - LOG_2) -
+    lgammal(k + 1) - lgammal(Theta[1] + k + 1);
+}

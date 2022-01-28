@@ -12,6 +12,7 @@ determineLogL_ <- function(lF, p) {
   if (lF == "COMP") return(-Inf)
   if (lF == "double_poisson") return(-Inf)
   if (lF == "bessel_I") return(-Inf)
+  if (lF == "bessel_I_logX") return(-Inf)
   if (lF == "negbin_marginal") return(log(p[1]) - log(p[1] + p[2]) + log1p(-p[3]))
   if (lF == "noObs") return(log1p(-p[1]))
   if (lF == "dR0") return(log(p[1]) + log1p(-p[4]) + (1 + p[2]) * (log1p(p[2]) - log(p[1] + p[2])))

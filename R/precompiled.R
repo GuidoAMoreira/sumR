@@ -86,6 +86,16 @@
 #' - String to access the precompiled function: \code{"bessel_I"}
 #'
 #' - parameter vector: \code{c(x, alpha)}
+#' 
+#' @section Modified Bessel function of the first kind with log argument:
+#' This is the same function as the one above, except that parameter \eqn{x} is
+#' given in the log scale. This is provided for numerical stability. For the
+#' cases where \code{x} is not very large, sums using this function and the
+#' above should return the same sum.
+#' 
+#' - String to access the precompiled function: \code{"bessel_I_logX"}
+#'
+#' - parameter vector: \code{c(logx, alpha)}
 #'
 #' @name precompiled
 #' @seealso \code{\link{infiniteSum}}, \code{\link{finiteSum}} and

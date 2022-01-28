@@ -30,6 +30,8 @@ long double bessel_I(long k, double *Theta);
 
 long double poisson_fact_moment(long k, double *Theta);
 
+long double bessel_I_logX(long k, double *Theta);
+
 #ifdef __cplusplus
 }
 #endif
