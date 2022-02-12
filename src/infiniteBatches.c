@@ -28,7 +28,7 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
     partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &cc, 0, &total);
     long double result = logFunVal[*n] + log1pl(total);
     
-    R_Free(logFunVal);
+    if (logFunVal != NULL) R_Free(logFunVal);
     return result;
   }
 
@@ -63,6 +63,6 @@ long double infiniteBatches_(long double logFun(long k, double *Theta),
     lS = logl(S);
   }
   
-  R_Free(logFunVal);
+  if (logFunVal != NULL) R_Free(logFunVal);
   return maxA + logl(partial + S);
 }

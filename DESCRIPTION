@@ -1,8 +1,8 @@
 Package: sumR
 Type: Package
 Title: Approximates Summation of Discrete Series
-Version: 0.4.1
-Date: 2022-01-28
+Version: 0.4.3
+Date: 2022-02-12
 Authors@R: c(person("Guido", "A. Moreira", email = "guidoalber@gmail.com",
               role = c("cre","aut"), comment=c(ORCID="0000-0001-7557-0874")),
              person("Luiz Max", "Carvalho", email = "lmax.fgv@gmail.com",
@@ -11,7 +11,8 @@ Maintainer: Guido A. Moreira <guidoalber@gmail.com>
 Description: Application of theoretical results which ensure that the summation
   of an infinite discrete series is within an arbitrary margin of error of its
   true value. The C code under the hood is shared through header files to allow
-  users to sum their own low level functions as well.
+  users to sum their own low level functions as well. Based on the paper by
+  Braden (1992) <doi: 10.2307/2324995>.
 License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.1.2

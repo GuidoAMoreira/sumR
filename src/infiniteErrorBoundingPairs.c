@@ -28,7 +28,7 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
     partial_logSumExp(logFunVal, maxIter - 1, logFunVal[*n], &c, 0, &total);
     long double result = logFunVal[*n] + log1p(total);
     
-    R_Free(logFunVal);
+    if (logFunVal != NULL) R_Free(logFunVal);
     return result;
   }
 
@@ -55,6 +55,6 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
     maxA), &cb);
   partial_logSumExp(&logFunVal[nMax], *n - nMax - 1, maxA, &cb, 1, &totalBack);
   
-  R_Free(logFunVal);
+  if (logFunVal != NULL) R_Free(logFunVal);
   return maxA + log1pl(total + totalBack);
 }

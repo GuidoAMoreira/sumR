@@ -22,6 +22,8 @@ long double sumNTimes_(long double logFun(long, double *Theta),
   if (n == N)
   {
     partial_logSumExp(logFunVal, N - 1, logFunVal[n], &c, 0, &total);
+    
+    if (logFunVal != NULL) R_Free(logFunVal);
     return logFunVal[n] + log1pl(total);
   }
 
@@ -32,12 +34,12 @@ long double sumNTimes_(long double logFun(long, double *Theta),
   if (n > 1)
     partial_logSumExp(logFunVal, n - 2, maxA, &c, 0, &total);
 
-  // Calculate the tail. Only loop once.
+  // Calculate the tail.
   do
     logFunVal[++n] = logFun(++n0, params);
   while (n < N);
   partial_logSumExp(&logFunVal[nMax], n - nMax, maxA, &cb, 1, &totalBack);
   
-  R_Free(logFunVal);
+  if (logFunVal != NULL) R_Free(logFunVal);
   return maxA + log1pl(total + totalBack);
 }

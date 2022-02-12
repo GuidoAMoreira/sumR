@@ -83,8 +83,8 @@ Since the batch sizes are known before the calculations are made,
 function evaluations can be vectorized. This is why there are two functions
 available. \code{infiniteSum_batches} does the calculations at the \code{R}
 level, while \code{infiniteSum_batches_C} interfaces the low level \code{C}
-code. However, the \code{C} code does not use vectorization to reduce
-dependency on third party libraries, and therefore the \code{R} level
+code. However, the \code{C} code does not use vectorization since it isn't
+available on long double precision type, and therefore the \code{R} level
 function should be faster in most cases.
 
 Another difference is that the low level code uses double precision for the
