@@ -100,11 +100,11 @@ The second algorithm, called Error bounding pairs is based on a more general
 result which works for any \eqn{0 \le L < 1}. This algorithm sums the series
 until
 
-\ifelse{html}{\out{<center>|a<sub>n+1</sub>/(1-L) - a<sub>n+1</sub> a<sub>n</sub>/(a<sub>n</sub> - a<sub>n+1</sub>)| < 2 ε.</center>}}{\deqn{\left|\frac{a_{n+1}}{1-L} - \frac{a_{n+1}a_n}{a_n-a_{n+1}}\right| < 2 \epsilon.}}
+\ifelse{html}{\out{|a<sub>n+1</sub>/(1-L) - a<sub>n+1</sub> a<sub>n</sub>/(a<sub>n</sub> - a<sub>n+1</sub>)| < 2 ε.}}{\deqn{\left|\frac{a_{n+1}}{1-L} - \frac{a_{n+1}a_n}{a_n-a_{n+1}}\right| < 2 \epsilon.}}
 
 Then the approximation is the added values of the sum plus
 
-\ifelse{html}{\out{<center> 0.5 (a<sub>n+1</sub>/(1-L) + a<sub>n+1</sub> a<sub>n</sub>/(a<sub>n</sub> - a<sub>n+1</sub>))</center>}}{\deqn{0.5 (\frac{a_{n+1}}{1-L} + \frac{a_{n+1}a_n}{a_n-a_{n+1}}).}}
+\ifelse{html}{\out{ 0.5 (a<sub>n+1</sub>/(1-L) + a<sub>n+1</sub> a<sub>n</sub>/(a<sub>n</sub> - a<sub>n+1</sub>))}}{\deqn{0.5 (\frac{a_{n+1}}{1-L} + \frac{a_{n+1}a_n}{a_n-a_{n+1}}).}}
 
 The Error bounding pairs method usually requires less function evaluations
 than the Sum-To-Threshold one, however the convergence checking is more
