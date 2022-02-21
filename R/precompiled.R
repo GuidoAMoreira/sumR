@@ -24,7 +24,7 @@
 #' This series is the kernel of the Conway-Maxwell-Poisson distribution, which
 #' generalizes the Poisson and Geometric distributions. Its form is
 #'
-#' \ifelse{html}{\out{ a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup> }}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
+#' \ifelse{html}{\out{<style='text-align: center;'>a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup> }}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
 #'
 #' \deqn{L = 0, log(L) = -\infty,}
 #'

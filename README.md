@@ -1,3 +1,9 @@
+<!-- badges: start -->
+[![CRAN\ Status\ Badge](http://r-pkg.org/badges/version/sumR?color=blue)](https://CRAN.R-project.org/package=sumR)
+[![Downloads](http://cranlogs.r-pkg.org/badges/sumR?color=blue)](http://CRAN.rstudio.com/package=sumR)
+[![R-CMD-check](https://github.com/GuidoAMoreira/sumR/workflows/R-CMD-check/badge.svg)](https://github.com/GuidoAMoreira/sumR/actions)
+<!-- badges: end -->
+
 # sumR <img src="man/figures/logo.jpeg" align="right" height="139"/>
 
 Approximate infinite series with a guaranteed error margin!
