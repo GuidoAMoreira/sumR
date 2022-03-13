@@ -5,15 +5,16 @@
 \alias{sumR}
 \title{sumR: Approximate series withing a desired error margin}
 \description{
-\if{html}{\figure{logo.jpeg}{options: width="120"}}\cr
+\if{html}{\figure{logo.jpeg}{options: width="120"}}
+}
+\details{
 The \pkg{sumR} package provides some \code{R} functions that allow the
 user to approximate the sum of series. It also interfaces the low level
 \code{C} functions that perform the actual summation, so that other packages
 can apply them to their own functions written in \code{C} or \code{C++}. The
 \href{https://github.com/GuidoAMoreira/sumR}{GitHub} page provides a short
 tutorial on how to achieve this.
-}
-\details{
+
 The underlying code is under frequent revision for improvements in speed,
 memory use and precision. As the need to implement other summation algorithms
 arise, they will be added.
