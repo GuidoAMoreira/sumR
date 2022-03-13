@@ -30,7 +30,7 @@ defined at the R level.
 This series is the kernel of the Conway-Maxwell-Poisson distribution, which
 generalizes the Poisson and Geometric distributions. Its form is
 
-\ifelse{html}{\out{<style='text-align: center;'>a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup> }}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
+\ifelse{html}{\out{<div style='text-align: center;'>a<sub>n</sub> = λ<sup>n</sup> / (n!)<sup>ν</sup></div> }}{\deqn{a_n = \frac{\lambda^n}{(n!)^\nu},}}
 
 \deqn{L = 0, log(L) = -\infty,}
 
@@ -58,7 +58,7 @@ modified Bessel function of the first kind of order 0 evaluated at
 This series is the kernel of the double Poisson distribution, which is a
 special case of the double exponential family, which extends it. Its form is
 
-\ifelse{html}{\out{ a<sub>n</sub> = φ<sup>0.5</sup> e<sup>-φ µ</sup> (e<sup>-n</sup>n<sup>n</sup> / n!)(eµ / n)<sup>φ n</sup> }}{\deqn{a_n = \sqrt{\phi}e^{-\phi\mu}\left(\frac{e^{-n}n^n}{n!}\right)\left(\frac{e\mu}{n}\right)^{\phi n},}}
+\ifelse{html}{\out{ <div style='text-align: center;'>a<sub>n</sub> = φ<sup>0.5</sup> e<sup>-φ µ</sup> (e<sup>-n</sup>n<sup>n</sup> / n!)(eµ / n)<sup>φ n</sup></div> }}{\deqn{a_n = \sqrt{\phi}e^{-\phi\mu}\left(\frac{e^{-n}n^n}{n!}\right)\left(\frac{e\mu}{n}\right)^{\phi n},}}
 
 \deqn{L = 0, log(L) = -\infty,}
 
@@ -78,7 +78,7 @@ This is the series form solution for the function. There are more time
 efficient methods for its evaluation however they don't guarantee good
 approximations with large parameters. Its form is
 
-\ifelse{html}{\out{ a<sub>n</sub> = (x / 2)<sup>2k+α</sup> / (k!Γ(k + α + 1)) }}{\deqn{a_n = \left(\frac{x}{2}\right)^{2k+\alpha}\frac{1}{k!\Gamma(k+\alpha+1)},}}
+\ifelse{html}{\out{ <div style='text-align: center;'>a<sub>n</sub> = (x / 2)<sup>2k+α</sup> / (k!Γ(k + α + 1))</div> }}{\deqn{a_n = \left(\frac{x}{2}\right)^{2k+\alpha}\frac{1}{k!\Gamma(k+\alpha+1)},}}
 
 \deqn{L = 0, log(L) = -\infty,}
 
@@ -86,7 +86,7 @@ for \eqn{x > 0} and \eqn{\alpha} any real value.
 
 The modified Bessel function of the second kind can be obtained with
 
-\ifelse{html}{\out{ K<sub>α</sub>(x) = π / 2 (I<sub>-α</sub>(x) - I<sub>α</sub>(x)) / (sin α π) }}{\deqn{K_\alpha(x) = \frac{\pi}{2}\frac{I_{-\alpha}(x)-I_\alpha(x)}{\sin\quad\alpha\pi},}}
+\ifelse{html}{\out{<div style='text-align: center;'> K<sub>α</sub>(x) = π / 2 (I<sub>-α</sub>(x) - I<sub>α</sub>(x)) / (sin α π)</div> }}{\deqn{K_\alpha(x) = \frac{\pi}{2}\frac{I_{-\alpha}(x)-I_\alpha(x)}{\sin\quad\alpha\pi},}}
 
 where \eqn{I} represents the modified function of the first kind and \eqn{K}
 of the second kind. It is worth remembering the \code{\link{infiniteSum}}
