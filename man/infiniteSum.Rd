@@ -9,7 +9,7 @@ infiniteSum(
   logFunction,
   parameters = numeric(),
   logL = NULL,
-  alternate = 0,
+  alternate = FALSE,
   epsilon = 1e-15,
   maxIter = 1e+05,
   n0 = 0,
@@ -28,7 +28,7 @@ argument equivalent to \eqn{n} in
 \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and the second must be a vector
 of numeric parameters.}
 
-\item{parameters}{A numeric vector with parameters used in logFunction.
+\item{parameters}{A numeric vector with parameters used in \code{logFunction}.
 Vectorized summation over various parameter values sets is not implemented.
 Use \code{\link{apply}} or their variants to achieve this.}
 
@@ -39,10 +39,10 @@ series is alternating, defined with argument \code{alternate}. If left as
 \code{NULL} and \code{logFunction} is defined in \code{R}, the
 \code{batches} algorithm with default settings is used. See 'details'.}
 
-\item{alternate}{Either -1, 0 or 1. If 0, the series is not alternating.
-Otherwise, the series is alternating where the first element's sign is
-either 1 or -1, as entered in this parameter. If not 0, arguments \code{logL}
-and \code{forceAlgorithm} are ignored.}
+\item{alternate}{Either -1, 0 or 1. If 0 (or \code{FALSE}), the series is not
+alternating and positive. Otherwise, the series is alternating where the
+first element's sign is either 1 or -1, as entered in this parameter. If not
+0, arguments \code{logL} and \code{forceAlgorithm} are ignored.}
 
 \item{epsilon}{The desired error margin for the approximation. See 'details'.}
 
@@ -51,16 +51,15 @@ most cases, this number will not be reached unless it is very small. A value
 too high is not recommended as an array of this size is reserved in memory
 during the algorithm.}
 
-\item{n0}{The sum will be approximated for the series starting at this value.}
+\item{n0}{The sum will be approximated for the series starting at this value
+for the first parameter of \code{logFunction}.}
 
 \item{forceAlgorithm}{A value to control which summation algorithm to use.
 Ignored if the series is alternating, defined with argument \code{alternate}.
 See 'details'.}
 }
 \value{
-A list with two named members, \code{sum} and \code{n}. \code{sum} is
-the approximated value in the log scale and \code{n} is the total number of
-iterations, that is, the number of times the function was evaluated.
+A \code{\link{summed-objects}} object.
 }
 \description{
 For series that pass the ratio test, the approximation is analytically
@@ -81,9 +80,8 @@ which means that the ratio
 \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} must
 converge to a number \eqn{L < 1} when \eqn{n} goes to infinity. The log of
 \eqn{L} should be provided to the function for a better approximation.
-Otherwise, a warning will be given and the program will try to estimate its
-value, however, the theoretical result that guarantees the approximation does
-not necessarily hold in this case.
+This is not necessary in case a precompiled function is used. In this case
+the value of \eqn{L} is coded into the package.
 
 Another requirement in the current installment of this function is that the
 series must have only a single maximum. This is the case for most discrete
@@ -113,10 +111,10 @@ demanding, which means that it is typically slower, albeit slightly. If
 pairs becomes almost as fast as the Sum-To-Threshold method.
 
 The third algorithm is called batches method and is used when \eqn{L} is
-unknown. Its use requires some fine tuning, so there is a standalone function
-for it called \code{\link{infiniteSum_batches}}. Its use and functionality
-can be seen in its own documentation. When used as a result of this function,
-default settings are used.
+left at \code{NULL}. Its use requires some fine tuning, so there is a
+standalone function for it called \code{\link{infiniteSum_batches}}. Its use
+and functionality can be seen in its own documentation. When called as a
+result of this function, default settings are used.
 
 The \code{forceAlgorithm} parameter can be used to
 control which algorithm to use. When it is 0, the program automatically
@@ -137,7 +135,7 @@ The function to be summed can be an R function or a string naming the
 precompiled function in the package. The list of precompiled functions can
 be found in \code{\link{precompiled}}, and more functions will be added in
 time. As is intuitive, using a precompiled function is much faster than using
-an \code{R} function. In fact, it has been observed to be dozens time faster.
+an \code{R} function. In fact, it has been observed to be dozens times faster.
 
 The advanced user can program their own precompiled functions and use the
 package's summation algorithms by linking the appropriate header file. See
@@ -146,12 +144,12 @@ quick tutorial.
 }
 \examples{
 ## Define some function that is known to pass the ratio test.
-param = 0.1
+param <- 0.1
 funfun <- function(k, p) return(k * log1p(-p[1]))
 result <- infiniteSum(funfun, parameters = param, logL = log1p(-param))
 
 ## This series is easy to verify analytically
-TrueSum = -log(param)
+TrueSum <- -log(param)
 TrueSum - result$sum
 # Since exp(logL) = 0.9, the Error bounding pairs
 # algorithm is used. Notice that it only required
@@ -161,7 +159,7 @@ result$n
 ## A common problem is finding the normalizing constant for the
 ## Conway-Maxwell-Poisson distribution. It has already been included
 ## in the precompiled list of functions.
-comp_params = c(lambda = 5, nu = 3)
+comp_params <- c(lambda = 5, nu = 3)
 result <- infiniteSum("COMP", comp_params)
 result
 }

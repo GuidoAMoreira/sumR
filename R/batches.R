@@ -23,9 +23,7 @@
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
-#' @return A list with two named members, \code{sum} and \code{n}. \code{sum} is
-#' the approximated value in the log scale and \code{n} is the total number of
-#' iterations, that is, the number of times the function was evaluated.
+#' @return A \code{\link{summed-objects}} object.
 #' @seealso \code{\link{precompiled}} provides a list with precompiled functions
 #' that can be used for the summation. \code{\link{infiniteSum}} is a more
 #' efficient algorithm.

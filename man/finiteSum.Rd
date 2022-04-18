@@ -27,7 +27,7 @@ to perform in the function.}
 \item{n0}{The sum will be performed for the series starting at this value.}
 }
 \value{
-The result of the summed series in the log scale.
+A \code{\link{summed-objects}} object.
 }
 \description{
 A discrete finite series is calculated exactly with no need for
