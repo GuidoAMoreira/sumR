@@ -42,7 +42,9 @@ SEXP envir, lF;
 // Wrapping sums for functions defined at the R level
 static inline long double translator(long k, double *Theta)
 {
+  SEXP integer = PROTECT(Rf_ScalarInteger(k));
   defineVar(install("k"), Rf_ScalarInteger(k), envir);
+  UNPROTECT(1);
   return (long double)feval(lF, envir);
 }
 
