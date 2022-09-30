@@ -43,7 +43,7 @@ SEXP envir, lF;
 static inline long double translator(long k, double *Theta)
 {
   SEXP integer = PROTECT(Rf_ScalarInteger(k));
-  defineVar(install("k"), Rf_ScalarInteger(k), envir);
+  defineVar(install("k"), integer, envir);
   UNPROTECT(1);
   return (long double)feval(lF, envir);
 }
