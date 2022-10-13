@@ -2,7 +2,7 @@ Package: sumR
 Type: Package
 Title: Approximate Summation of Series
 Version: 0.4.9
-Date: 2022-09-30
+Date: 2022-10-13
 Authors@R: c(person("Guido", "A. Moreira", email = "guidoalber@gmail.com",
               role = c("cre","aut"), comment=c(ORCID="0000-0001-7557-0874")),
              person("Luiz Max", "Carvalho", email = "lmax.fgv@gmail.com",
