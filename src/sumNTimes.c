@@ -14,7 +14,7 @@ long double sumNTimes_(long double logFun(long, double *Theta),
   maxA = logFunVal[n]; nMax = n;
   while (!R_FINITE(logFunVal[n]))
     logFunVal[++n] = logFun(++n0, params);
-
+  
   do
     logFunVal[++n] = logFun(++n0, params);
   while (logFunVal[n] >= logFunVal[n - 1] && n < N);
@@ -22,11 +22,11 @@ long double sumNTimes_(long double logFun(long, double *Theta),
   if (n == N)
   {
     partial_logSumExp(logFunVal, N - 1, logFunVal[n], &c, 0, &total);
-    
+    long double result = logFunVal[n] + log1pl(total);
     if (logFunVal != NULL) R_Free(logFunVal);
-    return logFunVal[n] + log1pl(total);
+    return result;
   }
-
+  
   // I know which is the max due to the stop criteria.
   // Assumed local max = global max.
   maxA = logFunVal[n - 1];
