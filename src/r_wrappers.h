@@ -42,8 +42,7 @@ SEXP envir, lF;
 // Wrapping sums for functions defined at the R level
 static inline long double translator(long k, double *Theta)
 {
-  SEXP integer = PROTECT(Rf_ScalarInteger(k));
-  defineVar(install("k"), integer, envir);
+  defineVar(install("k"), PROTECT(Rf_ScalarInteger(k)), envir);
   UNPROTECT(1);
   return (long double)feval(lF, envir);
 }
@@ -65,23 +64,5 @@ static inline long double algorithm_selector(lFptr logF, double *params,
   else
     error("Invalid forceAlgorithm argument.\n");
 }
-
-// Wrapper for R defined function
-SEXP inf_sum(SEXP logFun, SEXP params, SEXP logL, SEXP alternating, SEXP eps,
-             SEXP maxIter, SEXP n0, SEXP rho, SEXP forceAlgo);
-
-// Wrapper for C pre-compiled code
-SEXP infinite_sum_callPrecomp(SEXP lF, SEXP params, SEXP alternating,
-                              SEXP eps, SEXP maxIter, SEXP n0, SEXP forceAlgo);
-
-// Wrappers for the c-folding algorithm
-SEXP inf_batches(SEXP logFun, SEXP params, SEXP batch_size, SEXP eps,
-                 SEXP maxIter, SEXP n0, SEXP rho);
-
-SEXP infinite_batches_precomp(SEXP lF, SEXP params, SEXP batch_size,
-                              SEXP epsilon, SEXP maxIter, SEXP n0);
-
-// Wrappers for the fixed iterations algorithm
-SEXP sum_n_times_precomp(SEXP lF, SEXP params, SEXP N, SEXP n0);
 
 #endif
