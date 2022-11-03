@@ -26,7 +26,7 @@ print.summed <- function(x, ...) {
   cat("Method ", x$method, " performed ",
       ifelse(x$maxReached, "the maximum of ", ""),
       x$n, " iterations and reached ",
-      "the sum in the log scale: ", x$sum, sep = "")
+      "the sum in the log scale: ", x$sum, "\n", sep = "")
   invisible(x)
 }
 
