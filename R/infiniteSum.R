@@ -7,41 +7,41 @@
 #' @param logFunction The function that returns the series absolute value
 #' \ifelse{html}{\out{|a<sub>n</sub>|}}{\eqn{|a_n|}} in
 #' the log scale. If it is an alternating series, this is defined in
-#' argument \code{alternate}. Can either be an \code{R} function or a string
-#' indicating one of the precompiled functions. See \code{\link{precompiled}}
-#' for a list of available functions. If defined in \code{R}, the function's
+#' argument `alternate`. Can either be an `R` function or a string
+#' indicating one of the precompiled functions. See [precompiled()]
+#' for a list of available functions. If defined in `R`, the function's
 #' definition must have two arguments. The first argument must be the integer
 #' argument equivalent to \eqn{n} in
 #' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and the second must be a vector
 #' of numeric parameters.
-#' @param parameters A numeric vector with parameters used in \code{logFunction}.
+#' @param parameters A numeric vector with parameters used in `logFunction`.
 #' Vectorized summation over various parameter values sets is not implemented.
-#' Use \code{\link{apply}} or their variants to achieve this.
+#' Use [apply()] or their variants to achieve this.
 #' @param logL The log of the limit value of
 #' \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
 #' must be smaller than 1, or smaller than 0 in the log scale. Ignored if the
-#' series is alternating, defined with argument \code{alternate}. If left as
-#' \code{NULL} and \code{logFunction} is defined in \code{R}, the
-#' \code{batches} algorithm with default settings is used. See 'details'.
-#' @param alternate Either -1, 0 or 1. If 0 (or \code{FALSE}), the series is not
+#' series is alternating, defined with argument `alternate`. If left as
+#' `NULL` and `logFunction` is defined in `R`, the
+#' `batches` algorithm with default settings is used. See 'details'.
+#' @param alternate Either -1, 0 or 1. If 0 (or `FALSE`), the series is not
 #' alternating and positive. Otherwise, the series is alternating where the
 #' first element's sign is either 1 or -1, as entered in this parameter. If not
-#' 0, arguments \code{logL} and \code{forceAlgorithm} are ignored.
+#' 0, arguments `logL` and `forceAlgorithm` are ignored.
 #' @param epsilon The desired error margin for the approximation. See 'details'.
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small. A value
 #' too high is not recommended as an array of this size is reserved in memory
 #' during the algorithm.
 #' @param n0 The sum will be approximated for the series starting at this value
-#' for the first parameter of \code{logFunction}.
+#' for the first parameter of `logFunction`.
 #' @param forceAlgorithm A value to control which summation algorithm to use.
-#' Ignored if the series is alternating, defined with argument \code{alternate}.
+#' Ignored if the series is alternating, defined with argument `alternate`.
 #' See 'details'.
-#' @return A \code{\link{summed-objects}} object.
+#' @return A [summed-objects()] object.
 #' @details The approximated sum is based on some theoretical results which,
-#' analytically, guarantee that the approximation will be within \code{epsilon}
+#' analytically, guarantee that the approximation will be within `epsilon`
 #' distance to the true value. It is possible that the numerical result fails
-#' to fall in this distance due to floating point arithmetic. The \code{C} code
+#' to fall in this distance due to floating point arithmetic. The `C` code
 #' under the hood is being continuously reviewed to minimize this problem. They
 #' seem to occur more often when the series decays very fast to zero or when the
 #' total is a large number.
@@ -61,7 +61,7 @@
 #'
 #' There are currently two implemented algorithms that perform the calculations.
 #' The first, called Sum-To-Threshold, sums the series values until the series
-#' values are smaller than \code{epsilon}. This is the fastest algorithm, but
+#' values are smaller than `epsilon`. This is the fastest algorithm, but
 #' it is only guaranteed to provide an approximation within the desired error
 #' margin when \eqn{L < 0.5}.
 #'
@@ -82,18 +82,18 @@
 #' pairs becomes almost as fast as the Sum-To-Threshold method.
 #' 
 #' The third algorithm is called batches method and is used when \eqn{L} is
-#' left at \code{NULL}. Its use requires some fine tuning, so there is a
-#' standalone function for it called \code{\link{infiniteSum_batches}}. Its use
+#' left at `NULL`. Its use requires some fine tuning, so there is a
+#' standalone function for it called [infiniteSum_batches()]. Its use
 #' and functionality can be seen in its own documentation. When called as a
 #' result of this function, default settings are used.
 #'
-#' The \code{forceAlgorithm} parameter can be used to
+#' The `forceAlgorithm` parameter can be used to
 #' control which algorithm to use. When it is 0, the program automatically
 #' selects the Sum-to-threshold when \eqn{L < 0.5} and the Error bounding pairs
 #' when \eqn{0.5 \le L < 1}. Method batches is selected when \eqn{L} is left
-#' \code{NULL}. If \code{forceAlgorithm} is set to 1, the Sum-To-Threshold
+#' `NULL`. If `forceAlgorithm` is set to 1, the Sum-To-Threshold
 #' algorithm is forced. If it is 2, then the Error bounding pairs is forced. A
-#' small note, the Error bounding pairs algorithm can go up to \code{maxIter} +
+#' small note, the Error bounding pairs algorithm can go up to `maxIter` +
 #' 1 function evaluations. This is due to its convergence checking dependence on
 #' \ifelse{html}{\out{a<sub>n+1</sub>}}{\eqn{a_{n+1}}}. Finally, if the
 #' parameter is set as 3, the batches algorithm is used with default settings.
@@ -104,17 +104,17 @@
 #'
 #' The function to be summed can be an R function or a string naming the
 #' precompiled function in the package. The list of precompiled functions can
-#' be found in \code{\link{precompiled}}, and more functions will be added in
+#' be found in [precompiled()], and more functions will be added in
 #' time. As is intuitive, using a precompiled function is much faster than using
-#' an \code{R} function. In fact, it has been observed to be dozens times faster.
+#' an `R` function. In fact, it has been observed to be dozens times faster.
 #'
 #' The advanced user can program their own precompiled functions and use the
 #' package's summation algorithms by linking the appropriate header file. See
-#' the \href{https://github.com/GuidoAMoreira/sumR}{GitHub} readme for the a
+#' the [GitHub](https://github.com/GuidoAMoreira/sumR) readme for the a
 #' quick tutorial.
-#' @seealso \code{\link{precompiled}} provides a list with precompiled functions
-#' that can be used for the summation. \code{\link{infiniteSum_batches}} is
-#' an alternate method which does not require knowledge of the \code{logL}
+#' @seealso [precompiled()] provides a list with precompiled functions
+#' that can be used for the summation. [infiniteSum_batches()] is
+#' an alternate method which does not require knowledge of the `logL`
 #' argument.
 #' @examples
 #' ## Define some function that is known to pass the ratio test.

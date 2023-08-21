@@ -21,7 +21,7 @@ infiniteSum(
 \ifelse{html}{\out{|a<sub>n</sub>|}}{\eqn{|a_n|}} in
 the log scale. If it is an alternating series, this is defined in
 argument \code{alternate}. Can either be an \code{R} function or a string
-indicating one of the precompiled functions. See \code{\link{precompiled}}
+indicating one of the precompiled functions. See \code{\link[=precompiled]{precompiled()}}
 for a list of available functions. If defined in \code{R}, the function's
 definition must have two arguments. The first argument must be the integer
 argument equivalent to \eqn{n} in
@@ -30,7 +30,7 @@ of numeric parameters.}
 
 \item{parameters}{A numeric vector with parameters used in \code{logFunction}.
 Vectorized summation over various parameter values sets is not implemented.
-Use \code{\link{apply}} or their variants to achieve this.}
+Use \code{\link[=apply]{apply()}} or their variants to achieve this.}
 
 \item{logL}{The log of the limit value of
 \ifelse{html}{\out{a<sub>n+1</sub>/a<sub>n</sub>}}{\eqn{a_{n+1}/a_n}} which
@@ -59,7 +59,7 @@ Ignored if the series is alternating, defined with argument \code{alternate}.
 See 'details'.}
 }
 \value{
-A \code{\link{summed-objects}} object.
+A \code{\link[=summed-objects]{summed-objects()}} object.
 }
 \description{
 For series that pass the ratio test, the approximation is analytically
@@ -112,7 +112,7 @@ pairs becomes almost as fast as the Sum-To-Threshold method.
 
 The third algorithm is called batches method and is used when \eqn{L} is
 left at \code{NULL}. Its use requires some fine tuning, so there is a
-standalone function for it called \code{\link{infiniteSum_batches}}. Its use
+standalone function for it called \code{\link[=infiniteSum_batches]{infiniteSum_batches()}}. Its use
 and functionality can be seen in its own documentation. When called as a
 result of this function, default settings are used.
 
@@ -133,7 +133,7 @@ limit.
 
 The function to be summed can be an R function or a string naming the
 precompiled function in the package. The list of precompiled functions can
-be found in \code{\link{precompiled}}, and more functions will be added in
+be found in \code{\link[=precompiled]{precompiled()}}, and more functions will be added in
 time. As is intuitive, using a precompiled function is much faster than using
 an \code{R} function. In fact, it has been observed to be dozens times faster.
 
@@ -164,8 +164,8 @@ result <- infiniteSum("COMP", comp_params)
 result
 }
 \seealso{
-\code{\link{precompiled}} provides a list with precompiled functions
-that can be used for the summation. \code{\link{infiniteSum_batches}} is
+\code{\link[=precompiled]{precompiled()}} provides a list with precompiled functions
+that can be used for the summation. \code{\link[=infiniteSum_batches]{infiniteSum_batches()}} is
 an alternate method which does not require knowledge of the \code{logL}
 argument.
 }

@@ -7,20 +7,20 @@
 #' of approximation
 #' @param logFunction The function that returns the series value
 #' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
-#' the log scale. Can either be an \code{R} function or a string indicating one
-#' of the precompiled functions. See \code{\link{precompiled}} for a list of
-#' available functions. If defined in \code{R}, the function's definition must
+#' the log scale. Can either be an `R` function or a string indicating one
+#' of the precompiled functions. See [precompiled()] for a list of
+#' available functions. If defined in `R`, the function's definition must
 #' have two arguments. The first argument must be the integer argument
 #' equivalent to \eqn{n} in \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and
 #' the second must be a vector of numeric parameters.
 #' @param parameters A numeric vector with parameters used in logFunction.
 #' Vectorized summation over various parameter values sets is not implemented.
-#' Use \code{\link{apply}} or their variants to achieve this.
+#' Use [apply()] or their variants to achieve this.
 #' @param n A single integer positive number indicating the number of iterations
 #' to perform in the function.
 #' @param n0 The sum will be performed for the series starting at this value.
-#' @return A \code{\link{summed-objects}} object.
-#' @seealso \code{\link{precompiled}} provides a list with precompiled functions
+#' @return A [summed-objects()] object.
+#' @seealso [precompiled()] provides a list with precompiled functions
 #' that can be used for the summation.
 #' @importFrom matrixStats logSumExp
 #' @examples

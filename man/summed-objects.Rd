@@ -37,6 +37,6 @@ maximum iterations was reached.}
 }
 
 \seealso{
-\code{\link{infiniteSum}}, \code{\link{infiniteSum_batches}} and
-\code{\link{finiteSum}} for available methods.
+\code{\link[=infiniteSum]{infiniteSum()}}, \code{\link[=infiniteSum_batches]{infiniteSum_batches()}} and
+\code{\link[=finiteSum]{finiteSum()}} for available methods.
 }

@@ -3,19 +3,19 @@
 #'
 #' A simple method to perform the summation. It adds the values in batches and
 #' stops when the accumulated batch is smaller than the desired threshold. There
-#' is an implementation purely in \code{R} and one in \code{C}. The one in R is
+#' is an implementation purely in `R` and one in `C`. The one in R is
 #' usually slightly faster due to vectorized computing.
 #' @param logFunction The function that returns the series value
 #' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
-#' the log scale. Can either be an \code{R} function or a string indicating one
-#' of the pre-coded functions. See \code{\link{precompiled}} for a list of
-#' available functions. If defined in \code{R}, the function's definition must
+#' the log scale. Can either be an `R` function or a string indicating one
+#' of the pre-coded functions. See [precompiled()] for a list of
+#' available functions. If defined in `R`, the function's definition must
 #' have two arguments. The first argument must be the integer argument
 #' equivalent to \eqn{n} in \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and
 #' the second must be a vector of numeric parameters.
 #' @param parameters A numeric vector with parameters used in logFunction.
 #' Vectorized summation over various parameter values sets is not implemented.
-#' Use \code{\link{apply}} or their variants to achieve this.
+#' Use [apply()] or their variants to achieve this.
 #' @param batch_size The batch size at which point convergence checking is
 #' performed. The algorithm perform at least twice this number of function
 #' evaluations. See 'details'.
@@ -23,9 +23,9 @@
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
-#' @return A \code{\link{summed-objects}} object.
-#' @seealso \code{\link{precompiled}} provides a list with precompiled functions
-#' that can be used for the summation. \code{\link{infiniteSum}} is a more
+#' @return A [summed-objects()] object.
+#' @seealso [precompiled()] provides a list with precompiled functions
+#' that can be used for the summation. [infiniteSum()] is a more
 #' efficient algorithm.
 #' @details The series \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} must pass
 #' the ratio convergence test, meaning that the ratio
@@ -34,11 +34,11 @@
 #'
 #' The batches algorithm consists of evaluating the function a fixed number of
 #' times for two checkpoints. If the difference between the sum at these
-#' checkpoints is smaller than \code{epsilon}, the code stops and the later
+#' checkpoints is smaller than `epsilon`, the code stops and the later
 #' checkpoint sum is returned. Else, continue summing until the next checkpoint.
-#' All checkpoints are \code{batch_size} long.
+#' All checkpoints are `batch_size` long.
 #'
-#' This function's efficiency is reliant on the choice of \code{batch_size}.
+#' This function's efficiency is reliant on the choice of `batch_size`.
 #' If it is set too large, the algorithm overshoots the necessary
 #' number of function evaluations too much. If it is set too small, the
 #' algorithm will need to process too many partial summations which slows it
@@ -47,10 +47,10 @@
 #'
 #' Since the batch sizes are known before the calculations are made,
 #' function evaluations can be vectorized. This is why there are two functions
-#' available. \code{infiniteSum_batches} does the calculations at the \code{R}
-#' level, while \code{infiniteSum_batches_C} interfaces the low level \code{C}
-#' code. However, the \code{C} code does not use vectorization since it isn't
-#' available on long double precision type, and therefore the \code{R} level
+#' available. `infiniteSum_batches` does the calculations at the `R`
+#' level, while `infiniteSum_batches_C` interfaces the low level `C`
+#' code. However, the `C` code does not use vectorization since it isn't
+#' available on long double precision type, and therefore the `R` level
 #' function should be faster in most cases.
 #' 
 #' Another difference is that the low level code uses double precision for the

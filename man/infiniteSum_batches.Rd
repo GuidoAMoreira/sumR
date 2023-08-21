@@ -28,7 +28,7 @@ infiniteSum_batches_C(
 \item{logFunction}{The function that returns the series value
 \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
 the log scale. Can either be an \code{R} function or a string indicating one
-of the pre-coded functions. See \code{\link{precompiled}} for a list of
+of the pre-coded functions. See \code{\link[=precompiled]{precompiled()}} for a list of
 available functions. If defined in \code{R}, the function's definition must
 have two arguments. The first argument must be the integer argument
 equivalent to \eqn{n} in \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} and
@@ -36,7 +36,7 @@ the second must be a vector of numeric parameters.}
 
 \item{parameters}{A numeric vector with parameters used in logFunction.
 Vectorized summation over various parameter values sets is not implemented.
-Use \code{\link{apply}} or their variants to achieve this.}
+Use \code{\link[=apply]{apply()}} or their variants to achieve this.}
 
 \item{batch_size}{The batch size at which point convergence checking is
 performed. The algorithm perform at least twice this number of function
@@ -50,7 +50,7 @@ most cases, this number will not be reached unless it is very small.}
 \item{n0}{The sum will be approximated for the series starting at this value.}
 }
 \value{
-A \code{\link{summed-objects}} object.
+A \code{\link[=summed-objects]{summed-objects()}} object.
 }
 \description{
 A simple method to perform the summation. It adds the values in batches and
@@ -129,7 +129,7 @@ infiniteSum_batches("COMP", comp_params, batch_size = 11)$n
 infiniteSum_batches("COMP", comp_params, batch_size = 2)$n
 }
 \seealso{
-\code{\link{precompiled}} provides a list with precompiled functions
-that can be used for the summation. \code{\link{infiniteSum}} is a more
+\code{\link[=precompiled]{precompiled()}} provides a list with precompiled functions
+that can be used for the summation. \code{\link[=infiniteSum]{infiniteSum()}} is a more
 efficient algorithm.
 }
