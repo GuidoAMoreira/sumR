@@ -2,7 +2,7 @@
 #include "r_wrappers.h"
 
 lFptr precompiled_selector(SEXP funS, double *logL,
-                           double *params, R_xlen_t size){
+                           double *params, int size){
 
   if compareStr("negbin_marginal"){
     checkSize(size, 4);
