@@ -37,7 +37,8 @@
 #' @param forceAlgorithm A value to control which summation algorithm to use.
 #' Ignored if the series is alternating, defined with argument `alternate`.
 #' See 'details'.
-#' @return A [summed-objects()] object.
+#' @return A [summed-objects()] object. Note that the sum is returned in the
+#' \code{log} scale.
 #' @details The approximated sum is based on some theoretical results which,
 #' analytically, guarantee that the approximation will be within `epsilon`
 #' distance to the true value. It is possible that the numerical result fails

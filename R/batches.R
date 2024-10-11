@@ -23,7 +23,8 @@
 #' @param maxIter The maximum number of iterations for the approximation. In
 #' most cases, this number will not be reached unless it is very small.
 #' @param n0 The sum will be approximated for the series starting at this value.
-#' @return A [summed-objects()] object.
+#' @return A [summed-objects()] object. Note that the sum is returned in the
+#' \code{log} scale.
 #' @seealso [precompiled()] provides a list with precompiled functions
 #' that can be used for the summation. [infiniteSum()] is a more
 #' efficient algorithm.

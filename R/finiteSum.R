@@ -19,7 +19,8 @@
 #' @param n A single integer positive number indicating the number of iterations
 #' to perform in the function.
 #' @param n0 The sum will be performed for the series starting at this value.
-#' @return A [summed-objects()] object.
+#' @return A [summed-objects()] object. Note that the sum is returned in the
+#' \code{log} scale.
 #' @seealso [precompiled()] provides a list with precompiled functions
 #' that can be used for the summation.
 #' @importFrom matrixStats logSumExp
