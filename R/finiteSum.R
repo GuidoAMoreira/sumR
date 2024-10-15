@@ -4,7 +4,7 @@
 #' A discrete finite series is calculated exactly with no need for
 #' approximations. This can also be used for infinite series approximation with
 #' a pre-determined number of iterations, but this has no guarantee of quality
-#' of approximation
+#' of approximation.  Result is returned in the log scale.
 #' @param logFunction The function that returns the series value
 #' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
 #' the log scale. Can either be an `R` function or a string indicating one

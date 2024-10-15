@@ -2,8 +2,8 @@
 % Please edit documentation in R/sumR-package.R
 \docType{package}
 \name{sumR}
-\alias{sumR}
 \alias{sumR-package}
+\alias{sumR}
 \title{sumR: Approximate series withing a desired error margin}
 \description{
 \if{html}{\figure{logo.jpeg}{options: width="120"}}

@@ -50,13 +50,15 @@ most cases, this number will not be reached unless it is very small.}
 \item{n0}{The sum will be approximated for the series starting at this value.}
 }
 \value{
-A \code{\link[=summed-objects]{summed-objects()}} object.
+A \code{\link[=summed-objects]{summed-objects()}} object. Note that the sum is returned in the
+\code{log} scale.
 }
 \description{
 A simple method to perform the summation. It adds the values in batches and
 stops when the accumulated batch is smaller than the desired threshold. There
 is an implementation purely in \code{R} and one in \code{C}. The one in R is
-usually slightly faster due to vectorized computing.
+usually slightly faster due to vectorized computing. Result is returned
+in the log scale.
 }
 \details{
 The series \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} must pass

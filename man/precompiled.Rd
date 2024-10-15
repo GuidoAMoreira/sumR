@@ -58,9 +58,7 @@ modified Bessel function of the first kind of order 0 evaluated at
 This series is the kernel of the double Poisson distribution, which is a
 special case of the double exponential family, which extends it. Its form is
 
-\ifelse{html}{\out{<div style='text-align: center;'>a<sub>n</sub> = φ<sup>0.5</sup> e<sup>-φ µ</sup> (e<sup>-n</sup>n<sup>n</sup> / n!)(eµ / n)<sup>φ n</sup></div> }}{\deqn{a_n = \sqrt{\phi}e^{-\phi\mu}\left(\frac{e^{-n}n^n}{n!}\right)\left(\frac{e\mu}{n}\right)^{\phi n},}}
-
-\deqn{L = 0, log(L) = -\infty,}
+CC01C8fC38BWvCn8UdxTAcaF5lGqI0tJ\deqn{L = 0, log(L) = -\infty,}
 
 for \eqn{\lambda > 0} and \eqn{\phi > 0}.
 
@@ -78,9 +76,7 @@ This is the series form solution for the function. There are more time
 efficient methods for its evaluation however they don't guarantee good
 approximations with large parameters. Its form is
 
-\ifelse{html}{\out{<div style='text-align: center;'>a<sub>n</sub> = (x / 2)<sup>2k+α</sup> / (k!Γ(k + α + 1))</div> }}{\deqn{a_n = \left(\frac{x}{2}\right)^{2k+\alpha}\frac{1}{k!\Gamma(k+\alpha+1)},}}
-
-\deqn{L = 0, log(L) = -\infty,}
+mbz8Y164527PHVYWJJsmiXtGrdUMXilG-1\deqn{L = 0, log(L) = -\infty,}
 
 for \eqn{x > 0} and \eqn{\alpha} any real value.
 

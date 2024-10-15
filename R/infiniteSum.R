@@ -3,7 +3,8 @@
 #'
 #' For series that pass the ratio test, the approximation is analytically
 #' guaranteed to have an error that is smaller than epsilon. This can
-#' occasionally not happen due to floating point arithmetic.
+#' occasionally not happen due to floating point arithmetic. Result is returned
+#' in the log scale.
 #' @param logFunction The function that returns the series absolute value
 #' \ifelse{html}{\out{|a<sub>n</sub>|}}{\eqn{|a_n|}} in
 #' the log scale. If it is an alternating series, this is defined in

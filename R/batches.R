@@ -4,7 +4,8 @@
 #' A simple method to perform the summation. It adds the values in batches and
 #' stops when the accumulated batch is smaller than the desired threshold. There
 #' is an implementation purely in `R` and one in `C`. The one in R is
-#' usually slightly faster due to vectorized computing.
+#' usually slightly faster due to vectorized computing. Result is returned
+#' in the log scale.
 #' @param logFunction The function that returns the series value
 #' \ifelse{html}{\out{a<sub>n</sub>}}{\eqn{a_n}} in
 #' the log scale. Can either be an `R` function or a string indicating one

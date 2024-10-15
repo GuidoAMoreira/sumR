@@ -27,13 +27,14 @@ to perform in the function.}
 \item{n0}{The sum will be performed for the series starting at this value.}
 }
 \value{
-A \code{\link[=summed-objects]{summed-objects()}} object.
+A \code{\link[=summed-objects]{summed-objects()}} object. Note that the sum is returned in the
+\code{log} scale.
 }
 \description{
 A discrete finite series is calculated exactly with no need for
 approximations. This can also be used for infinite series approximation with
 a pre-determined number of iterations, but this has no guarantee of quality
-of approximation
+of approximation.  Result is returned in the log scale.
 }
 \examples{
 # Sum values from 5 to 100

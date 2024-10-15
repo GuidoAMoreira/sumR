@@ -59,12 +59,14 @@ Ignored if the series is alternating, defined with argument \code{alternate}.
 See 'details'.}
 }
 \value{
-A \code{\link[=summed-objects]{summed-objects()}} object.
+A \code{\link[=summed-objects]{summed-objects()}} object. Note that the sum is returned in the
+\code{log} scale.
 }
 \description{
 For series that pass the ratio test, the approximation is analytically
 guaranteed to have an error that is smaller than epsilon. This can
-occasionally not happen due to floating point arithmetic.
+occasionally not happen due to floating point arithmetic. Result is returned
+in the log scale.
 }
 \details{
 The approximated sum is based on some theoretical results which,
