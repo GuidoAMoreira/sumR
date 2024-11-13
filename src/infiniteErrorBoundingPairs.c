@@ -1,5 +1,6 @@
 #include "sumR_internal.h"
 #include "math.h"
+#include <stdbool.h> // for bool
 
 long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta),
                        double *params, double logL, double eps,
