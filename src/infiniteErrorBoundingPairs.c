@@ -6,6 +6,7 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
                        long maxIter, long n0, long* n)
 {
   // Declaration
+  bool isDecreasing = (logFun(maxIter, params) - logFun(maxIter-1, params) > logL);
   long nMax;
   long double maxA, lEps = logl(eps) + LOG_2, total = 0.,
     totalBack = 0., log1mL = Rf_logspace_sub(0, logL), c = 0., cb = 0.,
@@ -41,17 +42,24 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
 
   do
     logFunVal[++*n] = logFun(++n0, params);
-  while  ( (log1mL ? // if L = 0 there's a simpler convergence check
-              delta(logFunVal[*n] + logFunVal[*n - 1] -
-              Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]),
-              logFunVal[*n], log1mL) >= lEps :
-              (logFunVal[*n - 1] - logFunVal[*n] < Rf_log1pexp(logFunVal[*n] -
-                lEps))) &
-                (*n < maxIter));
+  //while  ( (log1mL ? // if L = 0 there's a simpler convergence check
+  //            delta(logFunVal[*n] + logFunVal[*n - 1] -
+  //            Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]),
+  //            logFunVal[*n], log1mL) >= lEps :
+  //            (logFunVal[*n - 1] - logFunVal[*n] < Rf_log1pexp(logFunVal[*n] -
+  //              lEps))) &
+  //              (*n < maxIter));
+  while (((isDecreasing & 
+            (logFunVal[*n] - log(-expm1(logFunVal[*n] - logFunVal[*n-1])) >=
+             lEps + LOG_2) |
+          (~isDecreasing &
+             (logFunVal[*n] + logL - log(-expm1(logL)) >= lEps + LOG_2))) &
+         (*n < maxIter));
+
   // Braden bounds
-  KahanSum(&totalBack, expl(logFunVal[*n] - log1mL - LOG_2 - maxA), &cb);
-  KahanSum(&totalBack, expl(logFunVal[*n] + logFunVal[*n - 1] -
-    Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]) - LOG_2 -
+  KahanSum(&totalBack, expl(logFunVal[*n] - log(-expm1(logFunVal[*n] -
+    logFunVal[*n-1])) - maxA), &cb);
+  KahanSum(&totalBack, expl(logFunVal[*n] + logL - log(-expm1(logL)) -
     maxA), &cb);
   partial_logSumExp(&logFunVal[nMax], *n - nMax - 1, maxA, &cb, 1, &totalBack);
   
