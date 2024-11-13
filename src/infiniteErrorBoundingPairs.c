@@ -42,16 +42,9 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
 
   do
     logFunVal[++*n] = logFun(++n0, params);
-  //while  ( (log1mL ? // if L = 0 there's a simpler convergence check
-  //            delta(logFunVal[*n] + logFunVal[*n - 1] -
-  //            Rf_logspace_sub(logFunVal[*n - 1], logFunVal[*n]),
-  //            logFunVal[*n], log1mL) >= lEps :
-  //            (logFunVal[*n - 1] - logFunVal[*n] < Rf_log1pexp(logFunVal[*n] -
-  //              lEps))) &
-  //              (*n < maxIter));
   while (((isDecreasing & 
             (logFunVal[*n] - log(-expm1(logFunVal[*n] - logFunVal[*n-1])) >=
-             lEps + LOG_2) |
+             lEps + LOG_2)) |
           (~isDecreasing &
              (logFunVal[*n] + logL - log(-expm1(logL)) >= lEps + LOG_2))) &
          (*n < maxIter));
