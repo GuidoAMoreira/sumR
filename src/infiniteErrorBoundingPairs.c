@@ -52,9 +52,9 @@ long double infiniteErrorBoundingPairs_(long double logFun(long k, double *Theta
 
   // Braden bounds
   KahanSum(&totalBack, expl(logFunVal[*n] - log(-expm1(logFunVal[*n] -
-    logFunVal[*n-1])) - maxA), &cb);
+    logFunVal[*n-1])) - LOG_2 - maxA), &cb);
   KahanSum(&totalBack, expl(logFunVal[*n] + logL - log(-expm1(logL)) -
-    maxA), &cb);
+    LOG_2 - maxA), &cb);
   partial_logSumExp(&logFunVal[nMax], *n - nMax - 1, maxA, &cb, 1, &totalBack);
   
   if (logFunVal != NULL) R_Free(logFunVal);
