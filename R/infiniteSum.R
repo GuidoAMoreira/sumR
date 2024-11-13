@@ -1,4 +1,4 @@
-#' Approximates the sum of a positive discrete infinite series with a single
+#' Returns the log of an approximation of the sum of a positive discrete infinite series with a single
 #' maximum
 #'
 #' For series that pass the ratio test, the approximation is analytically
