@@ -8,7 +8,7 @@
 double Rf_logspace_add(double, double);
 
 // Quality of life macros
-#define compareStr(s) (!strcmp(CHAR(STRING_PTR(funS)[0]), s))
+#define compareStr(s) (!strcmp(CHAR(STRING_PTR_RO(funS)[0]), s))
 #define arraysize(a) sizeof(a) / sizeof(double)
 #define checkSize(s, n) if (s != n) error("Wrong number of parameters. Expected %d, found %d.\n", n, s)
 
